@@ -8,8 +8,6 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-always-ensure t)
-;; use-package-always-defer messes with the loading of some packages such as
-;; mu4e. Maybe one of these days I'll come back to it.
 (setq use-package-always-defer t)
 
 ;; Initialize straight.el
@@ -811,6 +809,9 @@
   :init
   (marginalia-mode))
 
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+
 ;; Another set of optional settings recommended by Vertico dev
 (use-package emacs
   :custom
@@ -1114,3 +1115,5 @@
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 
 (load "~/git/private-dots/private-emacs.el")
+
+
