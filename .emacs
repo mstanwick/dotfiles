@@ -745,6 +745,8 @@
   :init
   (setq projectile-switch-project-action #'projectile-dired))
 
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
 (use-package magit
   :ensure t
   :config
