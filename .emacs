@@ -31,8 +31,6 @@
 
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file)
-(load "~/git/private-dots/private-emacs.el")
-
 
 ;;; macOS Settings
 (when (memq window-system '(mac ns x))
@@ -112,7 +110,6 @@
 
 (pdf-tools-install)
 
-;;; EMMS
 (emms-all)
 (setq emms-player-list '(emms-player-mpv)
       emms-info-functions '(emms-info-native))
@@ -121,7 +118,6 @@
 (global-set-key (kbd "C-c e >") 'emms-next)
 
 
-;;; Elfeed
 (elfeed-org)
 ;; Tag all YouTube entries as "video" and "youtube"
 (add-hook 'elfeed-new-entry-hook
@@ -1086,10 +1082,12 @@
             (setq-local ledger-complete-in-steps t)))
 (add-hook 'ledger-report-mode-hook 'compilation-minor-mode)
 
-;; Other keybindings
+;;; Other keybindings
 (global-set-key (kbd "C-c u") 'duplicate-dwim)
 (global-set-key (kbd "M-i") 'consult-imenu)
 (global-set-key (kbd "C-c r") #'revert-buffer)
 (global-set-key (kbd "C-c s") #'eshell)
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key (kbd "C-x p i") 'org-cliplink)
+
+(load "~/git/private-dots/private-emacs.el")
