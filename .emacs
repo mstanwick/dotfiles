@@ -609,11 +609,6 @@
          ("s-y" . org-download-yank))))
 
 ;;; Software Development
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1))
-  
 (use-package treemacs
   :config (setq treemacs-text-scale -.5))
 
