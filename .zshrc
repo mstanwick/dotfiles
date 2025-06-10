@@ -86,3 +86,10 @@ function cheat { curl -s cheat.sh/"$1" }
 
 # Update PATH
 PATH=$PATH:~/.local/bin
+PATH=$PATH:/usr/local/bin
+
+source $HOME/git/private-dots/private-zshrc
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
