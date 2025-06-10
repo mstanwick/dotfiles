@@ -154,7 +154,8 @@
    ("C-c a" . org-agenda)                   
    ("C-c c" . org-capture)                  
    ("C-c j r" . 'org-refile-goto-last-stored)
-   ("C-c /" . 'org-sparse-tree))
+   ("C-c /" . 'org-sparse-tree)
+   ("C-c M-." . org-timestamp-inactive))
   :config
   (setq org-ellipsis " ▾"
 	org-indent-mode t
@@ -656,6 +657,8 @@
   (setq typescript-indent-level 2)
   (add-hook 'after-save-hook #'prettier-js-mode)) ; format file with prettier on save)
 
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 (add-hook 'typescript-ts-mode-hook #'flycheck-mode)
 (eval-after-load 'flycheck
   '(add-to-list 'flycheck-checkers
@@ -702,6 +705,7 @@
 (add-hook 'js-mode-hook 'prettier-js-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
 (add-hook 'typescript-ts-mode-hook 'prettier-js-mode)
+
 ;; (setenv "NODE_PATH" "/usr/local/lib/node_modules")
 
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-ts-mode))
