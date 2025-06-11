@@ -78,7 +78,6 @@ alias updatey='sudo dnf -y update'
 
 # Program shortcuts
 alias zotero='~/zotero/zotero &'
-alias mullvad-browser='(cd ~/Application_Files/mullvad-browser/; ./start-mullvad-browser.desktop)'
 
 function weather { curl -s wttr.in/"$1"\?u }
 function sm-weather { curl -s wttr.in/"$1"\?u\?0 }
@@ -87,7 +86,10 @@ function cheat { curl -s cheat.sh/"$1" }
 
 # Update PATH
 PATH=$PATH:~/.local/bin
-export LEDGER_FILE=~/2-Areas/Financial/2025.journal
+PATH=$PATH:/usr/local/bin
 
-function start_sabnzbd { systemctl start docker.service ;
-			 docker start sabnzbd }
+source $HOME/git/private-dots/private-zshrc
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
