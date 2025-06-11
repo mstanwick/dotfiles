@@ -286,7 +286,11 @@
 	  ("ca" "@anywhere" todo "TODO"
 	   ((org-agenda-overriding-header "@anywhere")
 	    (org-agenda-tag-filter-preset
-	     '("+@anywhere")))))
+	     '("+@anywhere"))))
+	  ("v" "Read/Review" tags "+read_review"
+	   ((org-agenda-overriding-header "Read/Review")
+	    (org-agenda-category-filter-preset '("+Read/Review"))
+	    (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)))))
 	org-global-properties
 	'(("Effort_ALL" . "0:15 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00 8:00"))
 	org-archive-location "~/git/org/archive/%s_archive::"
