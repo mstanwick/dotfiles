@@ -663,7 +663,7 @@
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(add-hook 'typescript-ts-mode-hook #'flycheck-mode)
+(add-hook 'typescript-mode-hook #'flycheck-mode)
 (eval-after-load 'flycheck
   '(add-to-list 'flycheck-checkers
                 'typescript-eslint))
