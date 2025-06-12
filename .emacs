@@ -1044,7 +1044,11 @@
 (require 'company)
 (setq-local completion-at-point-functions
 	    (mapcar #'cape-company-to-capf
-		    (list #'company-files #'company-keywords #'company-dabbrev)))
+		    (list #'company-files #'company-keywords
+			  #'company-dabbrev)))
+
+(with-eval-after-load 'company
+  (add-to-list 'company-backends '(company-capf :with company-yasnippet)))
 
 (use-package markdown-mode
   :ensure t
