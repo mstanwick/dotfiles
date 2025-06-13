@@ -591,6 +591,7 @@
 
 (use-package eglot
   :ensure t
+  :bind ("C-c e r" . eglot-rename)
   :config
   (add-to-list 'eglot-server-programs '(python-mode . ("pylsp")))
   :hook
