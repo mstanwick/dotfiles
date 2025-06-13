@@ -585,6 +585,10 @@
 (use-package treemacs
   :config (setq treemacs-text-scale -.5))
 
+(use-package treemacs-nerd-icons
+  :config
+  (treemacs-load-theme "nerd-icons"))
+
 (use-package eglot
   :ensure t
   :config
@@ -753,8 +757,9 @@
   :bind ("C-x C-j" . dired-jump)
   :custom (dired-listing-switches "-agho --group-directories-first"))
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 (use-package auth-source
   :ensure nil
