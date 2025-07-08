@@ -241,6 +241,18 @@
 				       :empty-lines 1)
 				      ("p" "Personal Journal" entry (file+olp+datetree "~/git/org/journal.gpg")
 				       (file "~/git/org/templates/tpl-journal.txt") :time-prompt t)
+				      ("n" "New note (with Denote)" plain
+				       (file denote-last-path)
+				       #'denote-org-capture
+				       :no-save t
+				       :immediate-finish nil
+				       :kill-buffer t
+				       :jump-to-captured t)
+				      ("j" "Journal" entry
+				       (file denote-journal-path-to-new-or-existing-entry)
+				       "* %U %?\n%i\n%a"
+				       :kill-buffer t
+				       :empty-lines 1)
 				      ("m" "Media")
 				      ("mb" "Book to Read" entry (file+olp "~/git/org/entertainment.org" "Books" "To Read")
 				       (file "~/git/org/templates/tpl-books.txt"))
@@ -259,7 +271,15 @@
 				       (file "~/git/org/templates/tpl-music.txt"))
 				      ("mh" "Music Heard" entry (file+olp "~/git/org/entertainment.org" "Music" "Music Listened to")
 				       (file "~/git/org/templates/tpl-music_listened.txt"))
-				      ("w" "Weekly Review" entry (file+olp+datetree "~/git/org/weekly_review.org")
+				      ("o" "Cookbook" entry (file "~/git/org/cookbook.org")
+				       "%(org-chef-get-recipe-from-url)"
+				       :empty-lines 1)
+				      ("l" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
+				       "%(org-chef-get-recipe-string-from-url \"%:link\")"
+				       :empty-lines 1)
+				      ("a" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
+				       "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")
+				     ("w" "Weekly Review" entry (file+olp+datetree "~/git/org/weekly_review.org")
 				       (file "~/git/org/templates/tpl-weekly-review.txt") :jump-to-captured t)
 				      ("r" "Travel Templates")
 				      ("rl" "Travel Project Plan" entry (file+headline "~/git/org/travel.org" "Active Trips")
@@ -405,24 +425,6 @@
 	("Travel" ,(list (nerd-icons-mdicon "nf-md-airplane")) nil nil
 	 :ascent center)
 	))
-
-(with-eval-after-load 'org-capture
-  (add-to-list 'org-capture-templates
-               '("n" "New note (with Denote)" plain
-                 (file denote-last-path)
-                 #'denote-org-capture
-                 :no-save t
-                 :immediate-finish nil
-                 :kill-buffer t
-                 :jump-to-captured t)))
-
-(with-eval-after-load 'org-capture
-  (add-to-list 'org-capture-templates
-               '("j" "Journal" entry
-                 (file denote-journal-path-to-new-or-existing-entry)
-                 "* %U %?\n%i\n%a"
-                 :kill-buffer t
-                 :empty-lines 1)))
 
 ;; Always highlight the current agenda line
 (add-hook 'org-agenda-mode-hook
@@ -603,23 +605,7 @@
          ("s-y" . org-download-yank))))
 
 (use-package org-chef)
-
-(with-eval-after-load 'org-capture
-  (add-to-list 'org-capture-templates
-	       '("k" "Cookbook" entry (file "~/git/org/cookbook.org")
-		"%(org-chef-get-recipe-from-url)"
-		:empty-lines 1))
-  (add-to-list 'org-capture-templates
-	       '("z" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
-		"%(org-chef-get-recipe-string-from-url \"%:link\")"
-		:empty-lines 1))
-  (add-to-list 'org-capture-templates
-	       '("m" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
-		"* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")))
 	       
-               
-               
-
 ;;; Software Development
 (use-package treemacs
   :config (setq treemacs-text-scale -.5))
