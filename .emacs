@@ -123,6 +123,27 @@
                               :add '(video youtube)))
 (global-set-key (kbd "C-c w") 'elfeed)
 
+(use-package elfeed-tube
+  :ensure t ;; or :straight t
+  :after elfeed
+  :demand t
+  :config
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+  :bind (:map elfeed-show-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)
+         :map elfeed-search-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)))
+
+(use-package elfeed-tube-mpv
+  :ensure t ;; or :straight t
+  :bind (:map elfeed-show-mode-map
+              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+              ("C-c C-w" . elfeed-tube-mpv-where)))
+
 (use-package hyperbole)
 (hkey-ace-window-setup)
 (global-set-key (kbd "M-o") 'ace-window)
@@ -581,12 +602,35 @@
         (("s-Y" . org-download-screenshot)
          ("s-y" . org-download-yank))))
 
+(use-package org-chef)
+
+(with-eval-after-load 'org-capture
+  (add-to-list 'org-capture-templates
+	       '("k" "Cookbook" entry (file "~/git/org/cookbook.org")
+		"%(org-chef-get-recipe-from-url)"
+		:empty-lines 1))
+  (add-to-list 'org-capture-templates
+	       '("z" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
+		"%(org-chef-get-recipe-string-from-url \"%:link\")"
+		:empty-lines 1))
+  (add-to-list 'org-capture-templates
+	       '("m" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
+		"* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")))
+	       
+               
+               
+
 ;;; Software Development
 (use-package treemacs
   :config (setq treemacs-text-scale -.5))
 
+(use-package treemacs-nerd-icons
+  :config
+  (treemacs-load-theme "nerd-icons"))
+
 (use-package eglot
   :ensure t
+  :bind ("C-c e r" . eglot-rename)
   :config
   (add-to-list 'eglot-server-programs '(python-mode . ("pylsp")))
   :hook
@@ -753,8 +797,9 @@
   :bind ("C-x C-j" . dired-jump)
   :custom (dired-listing-switches "-agho --group-directories-first"))
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 (use-package auth-source
   :ensure nil
@@ -1103,5 +1148,3 @@
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 
 (load "~/git/private-dots/private-emacs.el")
-
-
