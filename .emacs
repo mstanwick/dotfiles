@@ -602,6 +602,24 @@
         (("s-Y" . org-download-screenshot)
          ("s-y" . org-download-yank))))
 
+(use-package org-chef)
+
+(with-eval-after-load 'org-capture
+  (add-to-list 'org-capture-templates
+	       '("k" "Cookbook" entry (file "~/git/org/cookbook.org")
+		"%(org-chef-get-recipe-from-url)"
+		:empty-lines 1))
+  (add-to-list 'org-capture-templates
+	       '("z" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
+		"%(org-chef-get-recipe-string-from-url \"%:link\")"
+		:empty-lines 1))
+  (add-to-list 'org-capture-templates
+	       '("m" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
+		"* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")))
+	       
+               
+               
+
 ;;; Software Development
 (use-package treemacs
   :config (setq treemacs-text-scale -.5))
@@ -1130,5 +1148,3 @@
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 
 (load "~/git/private-dots/private-emacs.el")
-
-
