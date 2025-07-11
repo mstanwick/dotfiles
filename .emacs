@@ -46,6 +46,7 @@
           web-mode
           rjsx-mode) . add-node-modules-path)))
 
+(server-start)
 
 ;;; UI Adjustments
 (setq inhibit-splash-screen t)
@@ -253,6 +254,9 @@
 				       "* %U %?\n%i\n%a"
 				       :kill-buffer t
 				       :empty-lines 1)
+				      ("l" "Org Protocol" entry
+				       (file+headline "~/git/org/inbox.org" "Captured Links")
+				       "* [[%:link][%:description]]\nCaptured On: %U\n\n%:initial")
 				      ("m" "Media")
 				      ("mb" "Book to Read" entry (file+olp "~/git/org/entertainment.org" "Books" "To Read")
 				       (file "~/git/org/templates/tpl-books.txt"))
@@ -274,7 +278,7 @@
 				      ("o" "Cookbook" entry (file "~/git/org/cookbook.org")
 				       "%(org-chef-get-recipe-from-url)"
 				       :empty-lines 1)
-				      ("l" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
+				      ("b" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
 				       "%(org-chef-get-recipe-string-from-url \"%:link\")"
 				       :empty-lines 1)
 				      ("a" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
@@ -425,6 +429,8 @@
 	("Travel" ,(list (nerd-icons-mdicon "nf-md-airplane")) nil nil
 	 :ascent center)
 	))
+
+(require 'org-protocol)
 
 ;; Always highlight the current agenda line
 (add-hook 'org-agenda-mode-hook
