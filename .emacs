@@ -255,7 +255,7 @@
 				       :kill-buffer t
 				       :empty-lines 1)
 				      ("l" "Org Protocol" entry
-				       (file+headline "~/git/org/inbox.org" "Captured Links")
+				       (file "~/git/org/inbox.org")
 				       "* [[%:link][%:description]]\nCaptured On: %U\n\n%:initial")
 				      ("m" "Media")
 				      ("mb" "Book to Read" entry (file+olp "~/git/org/entertainment.org" "Books" "To Read")
@@ -793,6 +793,8 @@
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
+(require 'dired-preview)
+
 (use-package auth-source
   :ensure nil
   :custom
@@ -1140,3 +1142,7 @@
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 
 (load "~/git/private-dots/private-emacs.el")
+
+;; Local Variables:
+;; flycheck-disabled-checkers: emacs-lisp-checkdoc
+;; End:
