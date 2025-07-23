@@ -95,7 +95,7 @@
 (setq use-dialog-box nil) ;; Don't pop up UI dialogs when prompting
 ;;Revert buffers when the underlying file has changed
 (global-auto-revert-mode 1)
-(auto-revert-verbose nil) ;; Disable message when a buffer is auto reverted
+(setq auto-revert-verbose nil) ;; Disable message when a buffer is auto reverted
 (setq global-auto-revert-non-file-buffers t) ; Also revert Dired and other buffers
 (electric-pair-mode 1)
 ;; Prevent it from closing a pair if the point is at the beginning or in the
