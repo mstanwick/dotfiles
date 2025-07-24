@@ -690,6 +690,7 @@
   :hook
   (typescript-ts-mode . eglot-ensure)
   (typescript-ts-mode . subword-mode)
+  (typescript-ts-mode . hs-minor-mode)
   :mode
   ("\\.tsx?\\'" . typescript-ts-mode)
   ("\\.ts\\'" . typescript-ts-mode)
