@@ -48,10 +48,6 @@
 
 (server-start)
 
-(use-package restclient
-  :straight (:host github :repo "pashky/restclient.el"
-                   :commit "b9b373c8fbd5c5f764e34541d1b496e1bb0d7dc1"))
-
 ;;; UI Adjustments
 (setq inhibit-splash-screen t)
 (menu-bar-mode -1)
@@ -879,6 +875,7 @@
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
 ;; Configuration from https://github.com/minad/consult
+;; 
 (use-package consult
   :ensure t
   :hook (completion-list-mode . consult-preview-at-point-mode)
