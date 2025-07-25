@@ -66,6 +66,7 @@
                 prog-mode-hook
                 conf-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
 ;; Override some modes which derive from the above
 (dolist (mode '(org-mode-hook
 		term-mode-hook
@@ -636,6 +637,7 @@
    (js-mode . eglot-ensure)
    (typescript-ts-mode . eglot-ensure)))
 (add-hook 'prog-mode-hook #'auto-fill-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
 
 (use-package docker
   :bind ("C-c d" . docker))
