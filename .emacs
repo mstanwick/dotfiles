@@ -448,7 +448,8 @@
 (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
 (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)
-							 (python . t)))
+							 (python . t)
+							 (restclient . t)))
 
 ;; Recommended settings for org-modern-mode
 (dolist (face '(window-divider
@@ -1139,6 +1140,8 @@
             (setq-local completion-cycle-threshold t)
             (setq-local ledger-complete-in-steps t)))
 (add-hook 'ledger-report-mode-hook 'compilation-minor-mode)
+
+
 
 ;;; Other keybindings
 (global-set-key (kbd "C-c u") 'duplicate-dwim)
