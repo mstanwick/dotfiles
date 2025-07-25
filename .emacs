@@ -123,7 +123,6 @@
 (global-set-key (kbd "C-c e q") 'emms-add-url)
 (global-set-key (kbd "C-c e >") 'emms-next)
 
-
 (elfeed-org)
 ;; Tag all YouTube entries as "video" and "youtube"
 (add-hook 'elfeed-new-entry-hook
@@ -166,7 +165,6 @@
   :bind
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
-
 
 ;;; Org Mode
 ;; Additional org-mode settings from SystemCrafters
@@ -731,7 +729,6 @@
 	(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
 	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-
 (add-to-list 'major-mode-remap-alist '((python-mode . python-ts-mode)
 				       (css-mode . css-ts-mode)
 				       (typescript-mode . typescript-ts-mode)
@@ -769,11 +766,10 @@
   :init
   (setq projectile-switch-project-action #'projectile-dired))
 
-
 (use-package rainbow-delimiters
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
-;; ;; (add-hook 'prog-mode #'rainbow-delimiters-mode)
+(add-hook 'prog-mode #'rainbow-delimiters-mode)
 
 (use-package magit
   :ensure t
@@ -882,7 +878,6 @@
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
 ;; Configuration from https://github.com/minad/consult
-;; 
 (use-package consult
   :ensure t
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -1140,8 +1135,6 @@
             (setq-local completion-cycle-threshold t)
             (setq-local ledger-complete-in-steps t)))
 (add-hook 'ledger-report-mode-hook 'compilation-minor-mode)
-
-
 
 ;;; Other keybindings
 (global-set-key (kbd "C-c u") 'duplicate-dwim)
