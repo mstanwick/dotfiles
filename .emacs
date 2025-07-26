@@ -114,6 +114,14 @@
                   (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (put 'downcase-region 'disabled nil)
 
+;;; Window Management
+(winner-mode)
+(tab-bar-mode -1)
+(setq tab-bar-show 'nil)
+(tab-bar-history-mode)
+(global-set-key (kbd "M-[") 'tab-bar-history-back)
+(global-set-key (kbd "M-]") 'tab-bar-history-forward)
+
 (pdf-tools-install)
 
 (emms-all)
