@@ -113,6 +113,7 @@
                    `(lambda (c)
                   (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (put 'downcase-region 'disabled nil)
+(setq sentence-end-double-space nil)
 
 ;;; Window Management
 (winner-mode)
