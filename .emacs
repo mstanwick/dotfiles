@@ -53,6 +53,10 @@
                    :commit "b9b373c8fbd5c5f764e34541d1b496e1bb0d7dc1"))
 
 ;;; UI Adjustments
+;; (setq frame-title-format "%b <%f>")
+(setq frame-title-format
+      '(buffer-file-name (:eval (abbreviate-file-name buffer-file-name))
+			 (dired-directory dired-directory "%b")))
 (setq inhibit-splash-screen t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
