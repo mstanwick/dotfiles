@@ -48,10 +48,6 @@
 
 (server-start)
 
-(use-package restclient
-  :straight (:host github :repo "pashky/restclient.el"
-                   :commit "b9b373c8fbd5c5f764e34541d1b496e1bb0d7dc1"))
-
 ;;; UI Adjustments
 ;; (setq frame-title-format "%b <%f>")
 (setq frame-title-format
