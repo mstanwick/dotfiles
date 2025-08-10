@@ -659,6 +659,7 @@
    (js-mode . eglot-ensure)
    (typescript-ts-mode . eglot-ensure)))
 (add-hook 'prog-mode-hook #'auto-fill-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
 
 (use-package docker
   :bind ("C-c d" . docker))
@@ -1157,6 +1158,7 @@
             (setq-local completion-cycle-threshold t)
             (setq-local ledger-complete-in-steps t)))
 (add-hook 'ledger-report-mode-hook 'compilation-minor-mode)
+(add-hook 'ledger-mode-hook #'hl-line-mode)
 
 ;;; Other keybindings
 (global-set-key (kbd "C-c u") 'duplicate-dwim)
