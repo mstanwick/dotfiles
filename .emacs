@@ -456,7 +456,21 @@
 
 (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)
 							 (python . t)
-							 (restclient . t)))
+							 (restclient . t)
+							 (ledger . t)
+							 (R . t)
+							 (ditaa . t)
+							 (dot . t)
+							 (emacs-lisp . t)
+							 (gnuplot . t)
+							 (haskell . nil)
+							 (latex . t)
+							 (ocaml . nil)
+							 (octave . t)
+							 (ruby . t)
+							 (screen . nil)
+							 (sql . nil)
+							 (sqlite . t)))
 
 ;; Recommended settings for org-modern-mode
 (dolist (face '(window-divider
@@ -777,7 +791,7 @@
 (use-package rainbow-delimiters
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
-(add-hook 'prog-mode #'rainbow-delimiters-mode)
+;; (add-hook 'prog-mode #'rainbow-delimiters-mode)
 
 (use-package magit
   :ensure t
