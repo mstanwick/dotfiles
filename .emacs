@@ -163,6 +163,7 @@
 (use-package hyperbole)
 (hkey-ace-window-setup)
 (global-set-key (kbd "M-o") 'ace-window)
+(hyperbole-mode 1)
 
 (use-package which-key
   :init (which-key-mode)
