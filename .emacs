@@ -161,9 +161,8 @@
               ("C-c C-w" . elfeed-tube-mpv-where)))
 
 (use-package hyperbole)
-(global-set-key (kbd "M-o") 'ace-window)
-(hkey-ace-window-setup)
 (hyperbole-mode 1)
+(hkey-ace-window-setup "\M-o")
 
 (use-package which-key
   :init (which-key-mode)
