@@ -49,10 +49,10 @@
 (server-start)
 
 ;;; UI Adjustments
-;; (setq frame-title-format "%b <%f>")
 (setq frame-title-format
-      '(buffer-file-name (:eval (abbreviate-file-name buffer-file-name))
-			 (dired-directory dired-directory "%b")))
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 (setq inhibit-splash-screen t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
