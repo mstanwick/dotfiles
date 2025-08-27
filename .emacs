@@ -36,15 +36,15 @@
   (setq insert-directory-program "gls"
 	dired-use-ls-dired t)
   (use-package add-node-modules-path
-  :ensure t
-  :hook ((js-mode
-          js-ts-mode
-          javascript-mode
-          javascript-ts-mode
-          typescript-mode
-          typescript-ts-mode
-          web-mode
-          rjsx-mode) . add-node-modules-path)))
+    :ensure t
+    :hook ((js-mode
+            js-ts-mode
+            javascript-mode
+            javascript-ts-mode
+            typescript-mode
+            typescript-ts-mode
+            web-mode
+            rjsx-mode) . add-node-modules-path)))
 
 (server-start)
 
@@ -109,9 +109,9 @@
 ;; This fixes an issue with a closing bracket being added when using the 
 ;; `< s RET' shortcut for org blocks
 (add-hook 'org-mode-hook (lambda ()
-           (setq-local electric-pair-inhibit-predicate
-                   `(lambda (c)
-                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+			   (setq-local electric-pair-inhibit-predicate
+				       `(lambda (c)
+					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (put 'downcase-region 'disabled nil)
 (setq sentence-end-double-space nil)
 
@@ -148,11 +148,11 @@
   ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
   (elfeed-tube-setup)
   :bind (:map elfeed-show-mode-map
-         ("F" . elfeed-tube-fetch)
-         ([remap save-buffer] . elfeed-tube-save)
-         :map elfeed-search-mode-map
-         ("F" . elfeed-tube-fetch)
-         ([remap save-buffer] . elfeed-tube-save)))
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)
+              :map elfeed-search-mode-map
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)))
 
 (use-package elfeed-tube-mpv
   :ensure t ;; or :straight t
@@ -250,7 +250,7 @@
 	org-capture-templates (quote (("t" "TODO" entry (file "~/git/org/inbox.org")
 				       (file "~/git/org/templates/tpl-todo.txt"))
 				      ("s" "Store item" entry (file "~/git/org/inbox.org")
-				       "* TODO %?\n %a \n %i") 
+				       "* %a \n %i") 
 				      ("k" "Cliplink capture task" entry (file "~/git/org/inbox.org")
 				       "* TODO %(org-cliplink-capture)"
 				       :empty-lines 1)
@@ -297,7 +297,7 @@
 				       :empty-lines 1)
 				      ("a" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
 				       "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")
-				     ("w" "Weekly Review" entry (file+olp+datetree "~/git/org/weekly_review.org")
+				      ("w" "Weekly Review" entry (file+olp+datetree "~/git/org/weekly_review.org")
 				       (file "~/git/org/templates/tpl-weekly-review.txt") :jump-to-captured t)
 				      ("r" "Travel Templates")
 				      ("rl" "Travel Project Plan" entry (file+headline "~/git/org/travel.org" "Active Trips")
@@ -640,7 +640,7 @@
          ("s-y" . org-download-yank))))
 
 (use-package org-chef)
-	       
+
 ;;; Software Development
 (use-package treemacs
   :config (setq treemacs-text-scale -.5))
@@ -693,9 +693,9 @@
 
 (use-package dape
   :preface
-    ;; By default dape shares the same keybinding prefix as `gud'
-    ;; If you do not want to use any prefix, set it to nil.
-    ;; (setq dape-key-prefix "\C-x\C-a")
+  ;; By default dape shares the same keybinding prefix as `gud'
+  ;; If you do not want to use any prefix, set it to nil.
+  ;; (setq dape-key-prefix "\C-x\C-a")
   :config (setq dape-cwd-function 'dape--default-cwd))
 
 ;; Enable repeat mode for more ergonomic `dape' use
@@ -790,9 +790,16 @@
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 ;; (add-hook 'prog-mode #'rainbow-delimiters-mode)
+
+(defun indent-whole-buffer ()
+  "Indent the entire buffer without affecting point or mark."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (indent-region (point-min) (point-max)))))
 
 (use-package magit
   :ensure t
@@ -846,7 +853,7 @@
   :init
   (vertico-mode))
 
- (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+(add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -871,7 +878,7 @@
   ;; commands are hidden in normal buffers. This setting is useful beyond
   ;; Vertico.
   (read-extended-command-predicate #'command-completion-default-include-p)
-    ;; Enable indentation+completion using the TAB key.
+  ;; Enable indentation+completion using the TAB key.
   ;; `completion-at-point' is often bound to M-TAB.
   (tab-always-indent 'complete)
 
