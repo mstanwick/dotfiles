@@ -80,6 +80,22 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
+;; These are the default values, but I keep them here for visibility.
+(setq spacious-padding-widths
+      '( :internal-border-width 15
+         :header-line-width 4
+         :mode-line-width 6
+         :tab-width 4
+         :right-divider-width 30
+         :scroll-bar-width 8
+         :fringe-width 8))
+
+;; Read the doc string of `spacious-padding-subtle-mode-line' as it
+;; is very flexible and provides several examples.
+(setq spacious-padding-subtle-frame-lines
+      `( :mode-line-active 'default
+         :mode-line-inactive vertical-border))
+
 (setq spacious-padding-subtle-mode-line
       `( :mode-line-active 'default
          :mode-line-inactive vertical-border)
