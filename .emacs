@@ -80,6 +80,10 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
+(setq spacious-padding-subtle-frame-lines
+      `( :mode-line-active 'default
+         :mode-line-inactive vertical-border))
+
 (setq spacious-padding-subtle-mode-line
       `( :mode-line-active 'default
          :mode-line-inactive vertical-border)
