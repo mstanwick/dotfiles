@@ -48,7 +48,7 @@
 
 (server-start)
 
-;;; UI Adjustments
+;;; UI Adjustments & other initialization settings
 (setq frame-title-format
       '((:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))
@@ -73,6 +73,8 @@
 		shell-mode-hook
 		eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(setq ring-bell-function 'ignore)
 
 (require 'all-the-icons)
 
@@ -318,7 +320,9 @@
 				       (file
 					"~/git/org/templates/tpl-el-paso-checklist.txt")
 				       :jump-to-captured t)))
-	org-agenda-files '("~/git/org/")
+	org-agenda-files '("~/git/org/"
+			   "~/git/org/travel/"
+			   "~/git/org/travel/202510-Great_Britain/")
 	org-agenda-custom-commands
 	'(("n" "Agenda and all TODOs"
 	   ((agenda "" nil)
