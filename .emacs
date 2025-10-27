@@ -1175,6 +1175,19 @@
 (add-hook 'ledger-report-mode-hook 'compilation-minor-mode)
 (add-hook 'ledger-mode-hook #'hl-line-mode)
 
+;; meal-planner
+(use-package meal-planner
+  :straight (meal-planner :type git :host github :repo
+			  "captainflasmr/meal-planner")
+  :config
+  (setq meal-planner-data-directory "~/git/org/meal_planning/meals/"
+	meal-planner-history-file "~/git/org/meal_planning/my-meal-history.el"))
+(require 'meal-planner)
+
+(use-package display-wttr
+  :config
+  (display-wttr-mode))
+
 ;;; Other keybindings
 (global-set-key (kbd "C-c u") 'duplicate-dwim)
 (global-set-key (kbd "M-i") 'consult-imenu)
