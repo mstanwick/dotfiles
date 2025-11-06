@@ -44,15 +44,14 @@
             typescript-mode
             typescript-ts-mode
             web-mode
-            rjsx-mode) . add-node-modules-path)))
+            rjsx-mode) . add-node-modules-path))
+  (set-frame-parameter nil 'ns-transparent-titlebar t)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
 (server-start)
 
 ;;; UI Adjustments & other initialization settings
-(setq frame-title-format
-      '((:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
+(setq-default frame-title-format "")
 (setq inhibit-splash-screen t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
