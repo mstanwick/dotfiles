@@ -411,7 +411,7 @@
 	("Diary" ,(list (nerd-icons-faicon "nf-fa-calendar")) nil nil
 	 :ascent center)
 	("Entertainment" ,(list (all-the-icons-faicon "film")) nil nil :ascent center)
-	("Family" ,(list (all-the-icons-material "people")) nil nil :ascent center)
+	("Community" ,(list (all-the-icons-material "people")) nil nil :ascent center)
 	("Financial" ,(list (all-the-icons-faicon "money")) nil nil :ascent
 	 center)
 	("Gardening" ,(list (nerd-icons-faicon "nf-fae-plant")) nil
@@ -435,8 +435,6 @@
 	("Physical Health" ,(list (nerd-icons-mdicon
 				   "nf-md-dumbbell")) nil nil :ascent center)
 	("Professional" ,(list (all-the-icons-faicon "briefcase")) nil
-	 nil :ascent center)
-	("Social" ,(list (nerd-icons-mdicon "nf-md-handshake")) nil
 	 nil :ascent center)
 	("Software Dev" ,(list (nerd-icons-faicon "nf-fa-code")) nil
 	 nil :ascent center)
