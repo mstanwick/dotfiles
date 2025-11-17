@@ -656,13 +656,17 @@
 
 (use-package eglot
   :ensure t
-  :bind ("C-c e r" . eglot-rename)
+  :bind ("C-c e n" . eglot-rename)
   :config
   (add-to-list 'eglot-server-programs '(python-mode . ("pylsp")))
   :hook
   ((python-mode . eglot-ensure)
    (js-mode . eglot-ensure)
    (typescript-ts-mode . eglot-ensure)))
+
+(with-eval-after-load 'eglot
+  (setq eglot-ignored-server-capabilities '(:codeActionProvider)))
+
 (add-hook 'prog-mode-hook #'auto-fill-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 
@@ -1202,6 +1206,7 @@
 (global-set-key (kbd "C-c s") #'eshell)
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key (kbd "C-x p i") 'org-cliplink)
+(global-set-key (kbd "C-c ;") 'er/expand-region)
 
 (load "~/git/private-dots/private-emacs.el")
 
