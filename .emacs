@@ -775,7 +775,8 @@
 				       (sh-base-mode . bash-ts-mode)))
 
 (add-hook 'js-mode-hook 'js2-minor-mode)
-(setq js2-highlight-level 3)
+;; (setq js2-highlight-level 3)
+(setq treesit-font-lock-level '4)
 
 (use-package combobulate
   :custom
