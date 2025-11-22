@@ -48,8 +48,6 @@
   (set-frame-parameter nil 'ns-transparent-titlebar t)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
-(server-start)
-
 ;;; UI Adjustments & other initialization settings
 (setq-default frame-title-format "")
 (setq inhibit-splash-screen t)
@@ -1203,12 +1201,14 @@
 (global-set-key (kbd "C-c u") 'duplicate-dwim)
 (global-set-key (kbd "M-i") 'consult-imenu)
 (global-set-key (kbd "C-c r") #'revert-buffer)
-(global-set-key (kbd "C-c s") #'eshell)
+(global-set-key (kbd "C-c s") #'eshell-current-directory)
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 (global-set-key (kbd "C-c ;") 'er/expand-region)
 
 (load "~/git/private-dots/private-emacs.el")
+
+(server-start)
 
 ;; Local Variables:
 ;; flycheck-disabled-checkers: emacs-lisp-checkdoc
