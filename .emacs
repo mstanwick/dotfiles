@@ -1168,6 +1168,24 @@
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-lambda))
 
+(defun eshell-current-directory (&optional directory)
+  "Open eshell current `default-directory' or DIRECTORY."
+  (interactive)
+  (let ((current-dir (or directory default-directory))
+        (eshell-buffer (or (get-buffer "*eshell*")
+                    (eshell))))
+    (switch-to-buffer eshell-buffer)
+    (eshell/cd current-dir)
+    (eshell-next-prompt)
+    ;; Regenerate prompt to show current directory.
+    ;; Avoid sending any half written input commands
+    (if (eobp)
+        (eshell-send-input nil nil nil)
+      (move-end-of-line nil)
+      (eshell-kill-input)
+      (eshell-send-input nil nil nil)
+      (yank))))
+
 (yas-global-mode 1)
 
 (use-package ledger-mode
