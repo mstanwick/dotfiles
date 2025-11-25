@@ -167,6 +167,15 @@
 (hyperbole-mode 1)
 (hkey-ace-window-setup "\M-o")
 
+(use-package avy
+  :bind
+  ("C-:" . 'avy-goto-char)
+  ("C-'" . 'avy-goto-char-2)
+  ("M-g g" . 'avy-goto-line)
+  ("M-g w" . 'avy-goto-word-1)
+  ("M-g e" . 'avy-goto-word-0))
+(global-set-key (kbd "C-c C-j") 'avy-resume)
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -174,7 +183,7 @@
   (setq which-key-idle-delay 1))
 
 (use-package helpful
-  :bind
+ :bind
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
 
