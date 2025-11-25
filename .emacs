@@ -173,6 +173,7 @@
   ("C-'" . 'avy-goto-char-2)
   ("M-g w" . 'avy-goto-word-1)
   ("M-g e" . 'avy-goto-word-0))
+(avy-setup-default)
 (global-set-key (kbd "C-c C-j") 'avy-resume)
 
 (use-package which-key
