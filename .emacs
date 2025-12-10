@@ -1233,6 +1233,7 @@
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key (kbd "C-x p i") 'org-cliplink)
 (global-set-key (kbd "C-c ;") 'er/expand-region)
+(global-set-key (kbd "M-C") #'upcase-char)
 
 (load "~/git/private-dots/private-emacs.el")
 
