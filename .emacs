@@ -398,7 +398,7 @@
 	org-log-reschedule 'note
 	org-show-notification-handler nil
 	org-track-ordered-property-with-tag t
-	org-stuck-projects '("/+PROJ-DONE" ("NEXT" "TODO" "SCHEDULED" "WAITING") () "\\<IGNORE\\>")
+	;; org-stuck-projects '("/+PROJ-DONE" ("NEXT" "TODO" "SCHEDULED" "WAITING") () "\\<IGNORE\\>")
 	org-clock-report-include-clocking-task t
 	org-yank-folded-subtrees nil
 	org-special-ctrl-a/e t
