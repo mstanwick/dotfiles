@@ -128,7 +128,9 @@
 
 (pdf-tools-install)
 
-(emms-all)
+(use-package time-zones :ensure t)
+
+(Emms-all)
 (setq emms-player-list '(emms-player-mpv)
       emms-info-functions '(emms-info-native))
 (global-set-key (kbd "C-c e p") 'emms-play-url)
