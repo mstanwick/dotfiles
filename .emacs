@@ -329,8 +329,7 @@
 					"~/git/org/templates/tpl-el-paso-checklist.txt")
 				       :jump-to-captured t)))
 	org-agenda-files '("~/git/org/"
-			   "~/git/org/travel/"
-			   "~/git/org/travel/202510-Great_Britain/")
+			   "~/git/org/travel/")
 	org-agenda-custom-commands
 	'(("n" "Agenda and all TODOs"
 	   ((agenda "" nil)
