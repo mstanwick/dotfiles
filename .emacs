@@ -790,6 +790,7 @@
 (add-hook 'js-mode-hook 'js2-minor-mode)
 ;; (setq js2-highlight-level 3)
 (setq treesit-font-lock-level '4)
+(setq js2-basic-offset 2)
 
 (use-package combobulate
   :custom
