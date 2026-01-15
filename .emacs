@@ -1247,3 +1247,4 @@
 ;; Local Variables:
 ;; flycheck-disabled-checkers: emacs-lisp-checkdoc
 ;; End:
+(put 'upcase-region 'disabled nil)
