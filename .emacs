@@ -73,6 +73,9 @@
 
 (setq ring-bell-function 'ignore)
 
+;; remove the title bar only when frame is maximized
+(add-hook 'window-size-change-functions 'frame-hide-title-bar-when-maximized)
+
 (require 'all-the-icons)
 
 (use-package doom-modeline
