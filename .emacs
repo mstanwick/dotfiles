@@ -1188,7 +1188,7 @@
   (interactive)
   (let ((current-dir (or directory default-directory))
         (eshell-buffer (or (get-buffer "*eshell*")
-                    (eshell))))
+			   (eshell))))
     (switch-to-buffer eshell-buffer)
     (eshell/cd current-dir)
     (eshell-next-prompt)
@@ -1200,6 +1200,9 @@
       (eshell-kill-input)
       (eshell-send-input nil nil nil)
       (yank))))
+
+(add-to-list 'eshell-expand-input-functions
+	     #'eshell-expand-history-references)
 
 (yas-global-mode 1)
 
