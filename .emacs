@@ -745,7 +745,7 @@
   :config
   (add-to-list 'eglot-server-programs '(typescript-ts-mode .
 							   ("typescript-language-server" "--stdio")))
-  (setq typescript-indent-level 2)
+
   (add-hook 'after-save-hook #'prettier-js-mode)) ; format file with prettier on save)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -790,7 +790,7 @@
 (add-hook 'js-mode-hook 'js2-minor-mode)
 ;; (setq js2-highlight-level 3)
 (setq treesit-font-lock-level '4)
-(setq js2-basic-offset 2)
+(setq-default js2-basic-offset 2)
 
 (use-package combobulate
   :custom
