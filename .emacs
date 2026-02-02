@@ -1201,9 +1201,6 @@
       (eshell-send-input nil nil nil)
       (yank))))
 
-(add-to-list 'eshell-expand-input-functions
-	     #'eshell-expand-history-references)
-
 (yas-global-mode 1)
 
 (use-package ledger-mode
