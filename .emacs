@@ -133,41 +133,6 @@
 
 (use-package time-zones :ensure t)
 
-(emms-all)
-(setq emms-player-list '(emms-player-mpv)
-      emms-info-functions '(emms-info-native))
-(global-set-key (kbd "C-c e p") 'emms-play-url)
-(global-set-key (kbd "C-c e q") 'emms-add-url)
-(global-set-key (kbd "C-c e >") 'emms-next)
-
-(elfeed-org)
-;; Tag all YouTube entries as "video" and "youtube"
-(add-hook 'elfeed-new-entry-hook
-          (elfeed-make-tagger :feed-url "youtube\\.com"
-                              :add '(video youtube)))
-(global-set-key (kbd "C-c w") 'elfeed)
-
-(use-package elfeed-tube
-  :ensure t ;; or :straight t
-  :after elfeed
-  :demand t
-  :config
-  ;; (setq elfeed-tube-auto-save-p nil) ; default value
-  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
-  (elfeed-tube-setup)
-  :bind (:map elfeed-show-mode-map
-              ("F" . elfeed-tube-fetch)
-              ([remap save-buffer] . elfeed-tube-save)
-              :map elfeed-search-mode-map
-              ("F" . elfeed-tube-fetch)
-              ([remap save-buffer] . elfeed-tube-save)))
-
-(use-package elfeed-tube-mpv
-  :ensure t ;; or :straight t
-  :bind (:map elfeed-show-mode-map
-              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
-              ("C-c C-w" . elfeed-tube-mpv-where)))
-
 (use-package hyperbole)
 (hyperbole-mode 1)
 (hkey-ace-window-setup "\M-o")
@@ -191,6 +156,16 @@
  :bind
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
+
+(keymap-set org-mode-map "M-m" #'casual-org-tmenu)
+(keymap-set org-table-fedit-map "M-m" #'casual-org-table-fedit-tmenu)
+
+(keymap-set org-agenda-mode-map "C-o" #'casual-agenda-tmenu)
+; bindings to make jumping consistent between Org Agenda and Casual Agenda
+(keymap-set org-agenda-mode-map "M-j" #'org-agenda-clock-goto)
+(keymap-set org-agenda-mode-map "J" #'bookmark-jump)
+
+(keymap-set calendar-mode-map "C-o" #'casual-calendar)
 
 ;;; Org Mode
 ;; Additional org-mode settings from SystemCrafters
@@ -217,157 +192,8 @@
 	org-agenda-include-diary t
 	org-agenda-diary-file "~/git/org/diary.org"
 	org-directory "~/git/org/"
-	org-tag-alist '((:startgrouptag)
-			("GTD")
-			("Control")
-			("Persp")
-			(:endgrouptag)
-			(:startgrouptag)
-			("Control")
-			(:grouptags)
-			("Context")
-			("Task")
-			(:endgrouptag)
-			(:startgrouptag)
-			("Persp")
-			(:grouptags)
-			("Vision")
-			("Goal")
-			("AOF")
-			("Project")
-			(:endgrouptag)
-			(:startgrouptag)
-			("Context")
-			(:grouptags)
-			("@home" . ?h) ("@phone" . ?o) ("@computer" . ?c)
-			("@anywhere" . ?a) ("@errands" . ?e)
-			("@business_hours" . ?b)
-			(:endgrouptag)
-			(:startgrouptag)
-			("Vision")
-			(:grouptags)
-			("{V@.+}")
-			(:endgrouptag)
-			(:startgrouptag)
-			("Goal")
-			(:grouptags)
-			("{G@.+}")
-			(:endgrouptag)
-			(:startgrouptag)
-			("AOF")
-			(:grouptags)
-			("{AOF@.+}")
-			(:endgrouptag)
-			(:startgrouptag)
-			("Project")
-			(:grouptags)
-			("{P@.+}")
-			(:endgrouptag))
 	org-todo-keywords '((sequence "TODO(t@/!)" "NEXT(n/!)" "WAITING(w@/!)" "SCHEDULED(k/!)" "PROJ(p)" "SOMEDAY(s)" "|" "DONE(d/!)" "CANCELLED(c@/!)"))
-	org-capture-templates (quote (("t" "TODO" entry (file "~/git/org/inbox.org")
-				       (file "~/git/org/templates/tpl-todo.txt"))
-				      ("s" "Store item" entry (file "~/git/org/inbox.org")
-				       "* %a \n %i") 
-				      ("k" "Cliplink capture task" entry (file "~/git/org/inbox.org")
-				       "* TODO %(org-cliplink-capture)"
-				       :empty-lines 1)
-				      ("p" "Personal Journal" entry (file+olp+datetree "~/git/org/journal.gpg")
-				       (file "~/git/org/templates/tpl-journal.txt") :time-prompt t)
-				      ("n" "New note (with Denote)" plain
-				       (file denote-last-path)
-				       #'denote-org-capture
-				       :no-save t
-				       :immediate-finish nil
-				       :kill-buffer t
-				       :jump-to-captured t)
-				      ("j" "Journal" entry
-				       (file denote-journal-path-to-new-or-existing-entry)
-				       "* %U %?\n%i\n%a"
-				       :kill-buffer t
-				       :empty-lines 1)
-				      ("l" "Org Protocol" entry
-				       (file "~/git/org/inbox.org")
-				       "* [[%:link][%:description]]\nCaptured On: %U\n\n%:initial")
-				      ("m" "Media")
-				      ("mb" "Book to Read" entry (file+olp "~/git/org/entertainment.org" "Books" "To Read")
-				       (file "~/git/org/templates/tpl-books.txt"))
-				      ("mm" "Movie to Watch" entry
-				       (file+olp "~/git/org/entertainment.org" "Movies & Television" "Movies" "Movies to Watch")
-				       (file "~/git/org/templates/tpl-movies.txt"))
-				      ("mw" "Movie Watched" entry
-				       (file+olp "~/git/org/entertainment.org"
-						 "Movies & Television" "Movies" "Movies Watched")
-				       (file "~/git/org/templates/tpl-movies_watched.txt"))
-				      ("mt" "Television to Watch" entry (file+olp "~/git/org/entertainment.org" "Movies & Television" "Television" "Television to Watch")
-				       (file "~/git/org/templates/tpl-series_to_watch.txt"))
-				      ("me" "Television Enjoyed" entry (file+olp "~/git/org/entertainment.org" "Movies & Television" "Television" "Television Watched")
-				       (file "~/git/org/templates/tpl-series_watched.txt"))
-				      ("ml" "Music to Listen to" entry (file+olp "~/git/org/entertainment.org" "Music" "Music to Listen to")
-				       (file "~/git/org/templates/tpl-music.txt"))
-				      ("mh" "Music Heard" entry (file+olp "~/git/org/entertainment.org" "Music" "Music Listened to")
-				       (file "~/git/org/templates/tpl-music_listened.txt"))
-				      ("o" "Cookbook" entry (file "~/git/org/cookbook.org")
-				       "%(org-chef-get-recipe-from-url)"
-				       :empty-lines 1)
-				      ("b" "Protocol Cookbook" entry (file "~/git/org/cookbook.org")
-				       "%(org-chef-get-recipe-string-from-url \"%:link\")"
-				       :empty-lines 1)
-				      ("a" "Manual Cookbook" entry (file "~/git/org/cookbook.org")
-				       "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")
-				      ("w" "Weekly Review" entry (file+olp+datetree "~/git/org/weekly_review.org")
-				       (file "~/git/org/templates/tpl-weekly-review.txt") :jump-to-captured t)
-				      ("r" "Travel Templates")
-				      ("rl" "Travel Project Plan" entry (file+headline "~/git/org/travel.org" "Active Trips")
-				       (file "~/git/org/templates/tpl-travel-planning.txt") :jump-to-captured t)
-				      ("rp" "Packing Lists")
-				      ("rpp" "Personal Trip Packing List" entry (file "~/git/org/inbox.org")
-				       (file "~/git/org/templates/tpl-packing-list-personal.txt") :jump-to-captured t)
-				      ("rpw" "Work Trip Packing List" entry (file "~/git/org/inbox.org")
-				       (file
-					"~/git/org/templates/tpl-packing-list-work.txt") :jump-to-captured
-				       t)
-				      ("c" "Checklists")
-				      ("ce" "Visiting El Paso" entry (file "~/git/org/inbox.org")
-				       (file
-					"~/git/org/templates/tpl-el-paso-checklist.txt")
-				       :jump-to-captured t)))
-	org-agenda-files '("~/git/org/"
-			   "~/git/org/travel/")
-	org-agenda-custom-commands
-	'(("n" "Agenda and all TODOs"
-	   ((agenda "" nil)
-	    (alltodo "" nil))
-	   nil)
-	  ("d" "Today (no recurring)"
-	   ((agenda ""
-		    ((org-agenda-overriding-header "Today (No recurring)")
-		     (org-agenda-span 'day))))
-	   ((org-agenda-tag-filter-preset
-	     '("-recurring"))))
-	  ("r" "Today (Recurring only)" agenda "+recurring"
-	   ((org-agenda-overriding-header "Today (Recurring only)")
-	    (org-agenda-tag-filter-preset
-	     '("+recurring"))))
-	  ("c" . "Contexts")
-	  ("cc" "@computer" todo "TODO"
-	   ((org-agenda-overriding-header "@computer")
-	    (org-agenda-tag-filter-preset
-	     '("+@computer"))))
-	  ("ch" "@home" todo "TODO"
-	   ((org-agenda-overriding-header "@home")
-	    (org-agenda-tag-filter-preset
-	     '("+@home"))))
-	  ("cb" "@business_hours" todo "TODO"
-	   ((org-agenda-tag-filter-preset
-	     '("+@business_hours"))))
-	  ("ca" "@anywhere" todo "TODO"
-	   ((org-agenda-overriding-header "@anywhere")
-	    (org-agenda-tag-filter-preset
-	     '("+@anywhere"))))
-	  ("v" "Read/Review" tags "+read_review"
-	   ((org-agenda-overriding-header "Read/Review")
-	    (org-agenda-category-filter-preset '("+Read/Review"))
-	    (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)))))
+	org-agenda-files '("~/git/org/")
 	org-global-properties
 	'(("Effort_ALL" . "0:15 0:30 1:00 2:00 3:00 4:00 5:00 6:00 7:00 8:00"))
 	org-archive-location "~/git/org/archive/%s_archive::"
@@ -409,56 +235,6 @@
 	org-hierarchical-todo-statistics nil
 	org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
 	org-use-sub-superscripts nil))
-
-(setq org-agenda-category-icon-alist
-      `(("Amateur Radio" ,(list (nerd-icons-codicon
-				 "nf-cod-radio_tower")) nil nil :ascent center)
-	("Birthdays/Anniversaries" ,(list (nerd-icons-mdicon "nf-md-cake")) nil nil
-	 :ascent center)
-	("Cooking" ,(list (nerd-icons-mdicon "nf-md-pot_steam")) nil
-	 nil :ascent center)
-	("Crafts" ,(list (nerd-icons-faicon
-			  "nf-fa-paintbrush")) nil nil :ascent center)
-	("Diary" ,(list (nerd-icons-faicon "nf-fa-calendar")) nil nil
-	 :ascent center)
-	("Entertainment" ,(list (all-the-icons-faicon "film")) nil nil :ascent center)
-	("Community" ,(list (all-the-icons-material "people")) nil nil :ascent center)
-	("Financial" ,(list (all-the-icons-faicon "money")) nil nil :ascent
-	 center)
-	("Gardening" ,(list (nerd-icons-faicon "nf-fae-plant")) nil
-	 nil :ascent center)
-	("Genealogy" ,(list (nerd-icons-mdicon "nf-md-family_tree")) nil nil
-	 :ascent center)
-	("Health" ,(list (nerd-icons-faicon "nf-fa-heartbeat")) nil
-	 nil :ascent center)
-	("Hobbies" ,(list (nerd-icons-mdicon "nf-md-gamepad_square")) nil
-	 nil :ascent center)
-	("Home" ,(list (nerd-icons-faicon "nf-fa-house")) nil nil
-	 :ascent center)
-	("inbox" ,(list (nerd-icons-mdicon "nf-md-inbox")) nil nil
-	 :ascent center)
-	("Intellectual" ,(list (nerd-icons-faicon "nf-fae-brain")) nil
-	 nil :ascent center)
-	("main" ,(list (nerd-icons-sucicon "nf-seti-todo")) nil nil
-	 :ascent center)
-	("Mental Health" ,(list (nerd-icons-mdicon "nf-md-head_heart")) nil
-	 nil :ascent center)
-	("Physical Health" ,(list (nerd-icons-mdicon
-				   "nf-md-dumbbell")) nil nil :ascent center)
-	("Professional" ,(list (all-the-icons-faicon "briefcase")) nil
-	 nil :ascent center)
-	("Software Dev" ,(list (nerd-icons-faicon "nf-fa-code")) nil
-	 nil :ascent center)
-	("Sleep" ,(list (nerd-icons-mdicon "nf-md-bed")) nil nil :ascent center)
-	("Star Wars" ,(list (nerd-icons-mdicon "nf-md-death_star"))
-	 nil nil :ascent center)
-	("Technology" ,(list (nerd-icons-faicon "nf-fa-laptop")) nil
-	 nil :ascent center)
-	("Spiritual" ,(list (nerd-icons-mdicon "nf-md-meditation"))
-	 nil nil :ascent center)
-	("Travel" ,(list (nerd-icons-mdicon "nf-md-airplane")) nil nil
-	 :ascent center)
-	))
 
 (require 'org-protocol)
 
@@ -754,6 +530,16 @@
 (eval-after-load 'flycheck
   '(add-to-list 'flycheck-checkers
                 'typescript-eslint))
+
+(with-eval-after-load 'flycheck
+  ;; Ensure the variable is a list
+  (setq flycheck-disabled-checkers
+        (if (listp flycheck-disabled-checkers)
+            flycheck-disabled-checkers
+          (list flycheck-disabled-checkers)))
+
+  ;; Now safely disable org-lint
+  (add-to-list 'flycheck-disabled-checkers 'org-lint))
 
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -1202,29 +988,6 @@
       (yank))))
 
 (yas-global-mode 1)
-
-(use-package ledger-mode
-  :config
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((ledger . t))))
-
-(add-hook 'ledger-mode-hook
-          (lambda ()
-            (setq-local tab-always-indent 'complete)
-            (setq-local completion-cycle-threshold t)
-            (setq-local ledger-complete-in-steps t)))
-(add-hook 'ledger-report-mode-hook 'compilation-minor-mode)
-(add-hook 'ledger-mode-hook #'hl-line-mode)
-
-;; meal-planner
-(use-package meal-planner
-  :straight (meal-planner :type git :host github :repo
-			  "captainflasmr/meal-planner")
-  :config
-  (setq meal-planner-data-directory "~/git/org/meal_planning/meals/"
-	meal-planner-history-file "~/git/org/meal_planning/my-meal-history.el"))
-(require 'meal-planner)
 
 (use-package display-wttr
   :config
