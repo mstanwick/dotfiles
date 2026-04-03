@@ -1227,6 +1227,8 @@
 (require 'meal-planner)
 
 (use-package display-wttr
+  :custom
+  (display-wttr-locations '("Raleigh, NC"))
   :config
   (display-wttr-mode))
 
@@ -1242,9 +1244,17 @@
 
 (load "~/git/private-dots/private-emacs.el")
 
+(put 'upcase-region 'disabled nil)
+
+(use-package agent-shell
+  :ensure t
+  :config
+  (add-to-list 'exec-path "/home/matt/.nvm/versions/node/v24.11.1/bin/")
+  (setq agent-shell-anthropic-authentication
+	(agent-shell-anthropic-make-authentication :login t)))
+
 (server-start)
 
 ;; Local Variables:
 ;; flycheck-disabled-checkers: emacs-lisp-checkdoc
 ;; End:
-(put 'upcase-region 'disabled nil)
