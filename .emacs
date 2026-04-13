@@ -84,10 +84,6 @@
 
 (setq spacious-padding-subtle-frame-lines
       `( :mode-line-active 'default
-         :mode-line-inactive vertical-border))
-
-(setq spacious-padding-subtle-mode-line
-      `( :mode-line-active 'default
          :mode-line-inactive vertical-border)
       spacious-padding-widths
       `( :internal-border-width 5))
