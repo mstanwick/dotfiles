@@ -63,7 +63,6 @@
                 prog-mode-hook
                 conf-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
-
 ;; Override some modes which derive from the above
 (dolist (mode '(org-mode-hook
 		term-mode-hook
@@ -71,7 +70,9 @@
 		eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+(setq window-combination-resize t)
 (setq ring-bell-function 'ignore)
+(setq help-window-select t)
 
 ;; remove the title bar only when frame is maximized
 (add-hook 'window-size-change-functions 'frame-hide-title-bar-when-maximized)
@@ -116,6 +117,8 @@
 					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (put 'downcase-region 'disabled nil)
 (setq sentence-end-double-space nil)
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
+(setq save-interprogram-paste-before-kill t)
 
 ;;; Window Management
 (winner-mode)
@@ -124,6 +127,15 @@
 (tab-bar-history-mode)
 (global-set-key (kbd "M-[") 'tab-bar-history-back)
 (global-set-key (kbd "M-]") 'tab-bar-history-forward)
+(defun toggle-delete-other-windows ()
+  "Delete other windows in frame if any, or restore previous window config."
+  (interactive)
+  (if (and winner-mode
+           (equal (selected-window) (next-window)))
+      (winner-undo)
+    (delete-other-windows)))
+
+(global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
 
 (pdf-tools-install)
 
@@ -518,7 +530,9 @@
 ;; Enable repeat mode for more ergonomic `dape' use
 (use-package repeat
   :config
-  (repeat-mode))
+  ((repeat-mode)
+  (setq set-mark-command-repeat-pop t)))
+
 
 (use-package python
   :ensure nil
@@ -689,7 +703,15 @@
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init
-  (savehist-mode))
+  (savehist-mode)
+  :config
+  (setq savehist-additional-variables
+      '(search-ring regexp-search-ring kill-ring))
+  (add-hook 'savehist-save-hook
+            (lambda ()
+              (setq kill-ring
+                    (mapcar #'substring-no-properties
+                            (cl-remove-if-not #'stringp kill-ring))))))
 
 (use-package marginalia
   :after vertico
