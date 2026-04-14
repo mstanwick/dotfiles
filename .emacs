@@ -117,7 +117,6 @@
 					  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (put 'downcase-region 'disabled nil)
 (setq sentence-end-double-space nil)
-(setq read-process-output-max (* 4 1024 1024)) ; 4MB
 (setq save-interprogram-paste-before-kill t)
 
 ;;; Window Management
