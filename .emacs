@@ -718,6 +718,12 @@
   :init
   (marginalia-mode))
 
+;; Emacs 30.2 seconds-to-string only accepts 1 arg; marginalia calls it with 3.
+;; This shim silently drops the extra args until Emacs is upgraded.
+(advice-add 'seconds-to-string :around
+            (lambda (orig seconds &rest _)
+              (funcall orig seconds)))
+
 (all-the-icons-completion-mode)
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
