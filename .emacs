@@ -529,8 +529,8 @@
 ;; Enable repeat mode for more ergonomic `dape' use
 (use-package repeat
   :config
-  ((repeat-mode)
-  (setq set-mark-command-repeat-pop t)))
+  (repeat-mode)
+  (setq set-mark-command-repeat-pop t))
 
 
 (use-package python
