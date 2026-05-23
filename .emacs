@@ -77,8 +77,6 @@
 ;; remove the title bar only when frame is maximized
 (add-hook 'window-size-change-functions 'frame-hide-title-bar-when-maximized)
 
-(require 'all-the-icons)
-
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
@@ -95,7 +93,6 @@
 (setq gc-cons-threshold (* 2 1000 1000))
 (setq-default fill-column 80)
 (setq isearch-allow-motion t)
-(setq sentence-end-double-space 'nil)
 (recentf-mode 1) ; Remember recently added files
 ;; Limit history to 25, a reasonable length that maintains emacs startup performance
 (setq history-length 25)
@@ -121,8 +118,6 @@
 
 ;;; Window Management
 (winner-mode)
-(tab-bar-mode -1)
-(setq tab-bar-show 'nil)
 (tab-bar-history-mode)
 (global-set-key (kbd "M-[") 'tab-bar-history-back)
 (global-set-key (kbd "M-]") 'tab-bar-history-forward)
@@ -136,23 +131,29 @@
 
 (global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
 
-(pdf-tools-install)
+(use-package pdf-tools
+  :magic ("%PDF" . pdf-view-mode)
+  :config (pdf-tools-install 'no-query))
 
 (use-package time-zones :ensure t)
 
-(emms-all)
-(setq emms-player-list '(emms-player-mpv)
-      emms-info-functions '(emms-info-native))
-(global-set-key (kbd "C-c e p") 'emms-play-url)
-(global-set-key (kbd "C-c e q") 'emms-add-url)
-(global-set-key (kbd "C-c e >") 'emms-next)
+(use-package emms
+  :config
+  (emms-all)
+  (setq emms-player-list '(emms-player-mpv)
+        emms-info-functions '(emms-info-native))
+  :bind
+  (("C-c e p" . emms-play-url)
+   ("C-c e q" . emms-add-url)
+   ("C-c e >" . emms-next)))
 
-(elfeed-org)
-;; Tag all YouTube entries as "video" and "youtube"
-(add-hook 'elfeed-new-entry-hook
-          (elfeed-make-tagger :feed-url "youtube\\.com"
-                              :add '(video youtube)))
-(global-set-key (kbd "C-c w") 'elfeed)
+(use-package elfeed
+  :bind ("C-c w" . elfeed)
+  :config
+  (elfeed-org)
+  (add-hook 'elfeed-new-entry-hook
+            (elfeed-make-tagger :feed-url "youtube\\.com"
+                                :add '(video youtube))))
 
 (use-package elfeed-tube
   :ensure t ;; or :straight t
@@ -252,13 +253,8 @@
 	org-agenda-use-tag-inheritance t
 	org-agenda-span 'day
 	org-cycle-separator-lines 0
-	org-enforce-todo-dependencies t
-	org-enforce-todo-checkbox-dependencies t
 	org-fold-catch-invisible-edits 'error
-	org-log-done 'time
-	org-log-reschedule 'note
 	org-show-notification-handler nil
-	org-track-ordered-property-with-tag t
 	org-stuck-projects '("/+PROJ-DONE" ("NEXT" "TODO" "SCHEDULED" "WAITING") () "\\<IGNORE\\>")
 	org-clock-report-include-clocking-task t
 	org-yank-folded-subtrees nil
@@ -561,18 +557,13 @@
   ("\\.ts\\'" . typescript-ts-mode)
   :config
   (add-to-list 'eglot-server-programs '(typescript-ts-mode .
-							   ("typescript-language-server" "--stdio")))
-
-  (add-hook 'after-save-hook #'prettier-js-mode)) ; format file with prettier on save)
+							   ("typescript-language-server" "--stdio"))))
 
 ;; Flycheck settings
 (with-eval-after-load 'flycheck
   (add-to-list 'flycheck-checkers 'typescript-eslint))
 (add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
 (add-hook 'typescript-mode-hook #'flycheck-mode)
-(eval-after-load 'flycheck
-  '(add-to-list 'flycheck-checkers
-                'typescript-eslint))
 
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -600,7 +591,6 @@
 				       (c++-mode . c++-ts-mode)
 				       (c-or-c++-mode . c-or-c++-ts-mode)
 				       (bash-mode . bash-ts-mode)
-				       (css-mode . css-ts-mode)
 				       (json-mode . json-ts-mode)
 				       (js-json-mode . json-ts-mode)
 				       (sh-mode . bash-ts-mode)
@@ -621,8 +611,6 @@
   ;; code.
   :load-path ("~/git/combobulate/"))
 
-(require 'prettier)
-(require 'prettier-js)
 (add-hook 'js-mode-hook 'prettier-js-mode)
 (add-hook 'web-mode-hook 'prettier-js-mode)
 (add-hook 'typescript-ts-mode-hook 'prettier-js-mode)
@@ -662,19 +650,18 @@
    ("C-c f" . magit-file-dispatch)))
 (setopt magit-format-file-function #'magit-format-file-all-the-icons)
 
-(with-eval-after-load 'magit-mode
+(with-eval-after-load 'magit
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(require 'dired-x)
-
 (use-package dired
   :ensure nil
   :commands (dired dired-jump)
   :bind ("C-x C-j" . dired-jump)
-  :custom (dired-listing-switches "-agho --group-directories-first"))
+  :custom (dired-listing-switches "-agho --group-directories-first")
+  :config (require 'dired-x))
 
 (use-package nerd-icons-dired
   :hook
@@ -744,11 +731,6 @@
   ;; Emacs 30 and newer: Disable Ispell completion function. As an alternative,
   ;; try `cape-dict'.
   (text-mode-ispell-word-completion nil)
-
-  ;; Hide commands in M-x which do not apply to the current mode.  Corfu
-  ;; commands are hidden, since they are not used via M-x. This setting is
-  ;; useful beyond Corfu.
-  (read-extended-command-predicate #'command-completion-default-include-p)
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -770,11 +752,6 @@
 (use-package consult
   :ensure t
   :hook (completion-list-mode . consult-preview-at-point-mode)
-  :init     (setq register-preview-delay 0.5
-		  register-preview-function #'consult-register-format)
-  (advice-add #'register-preview :override #'consult-register-window)
-  (setq xref-show-xrefs-function #'consult-xref
-	xref-show-definitions-function #'consult-xref)
   ;; Replace bindings. Lazily loaded by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
 	 ("C-s-j" . consult-buffer)
@@ -830,9 +807,6 @@
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
          ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
   ;; The :init configuration is always executed (Not lazy)
   :init
   ;; Optionally configure the register formatting. This improves the register
@@ -970,13 +944,12 @@
       (with-no-warnings (font-lock-fontify-buffer)))))
 (add-hook 'prog-mode-hook #'highlight-codetags-local-mode)
 
-(require 'company)
-(setq-local completion-at-point-functions
-	    (mapcar #'cape-company-to-capf
-		    (list #'company-files #'company-keywords
-			  #'company-dabbrev)))
-
-(with-eval-after-load 'company
+(use-package company
+  :config
+  (setq-local completion-at-point-functions
+              (mapcar #'cape-company-to-capf
+                      (list #'company-files #'company-keywords
+                            #'company-dabbrev)))
   (add-to-list 'company-backends '(company-capf :with company-yasnippet)))
 
 (use-package markdown-mode
@@ -1049,7 +1022,6 @@
   :config
   (setq meal-planner-data-directory "~/git/org/meal_planning/meals/"
 	meal-planner-history-file "~/git/org/meal_planning/my-meal-history.el"))
-(require 'meal-planner)
 
 (use-package display-wttr
   :custom
