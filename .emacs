@@ -529,9 +529,16 @@
 ;; Enable repeat mode for more ergonomic `dape' use
 (use-package repeat
   :config
-  ((repeat-mode)
-  (setq set-mark-command-repeat-pop t)))
+  (repeat-mode)
+  (setq set-mark-command-repeat-pop t)
+  (defvar-keymap buffer-navigation-repeat-map
+    :doc "Repeat map for next-buffer/previous-buffer via C-x <arrow>."
+    "<right>" #'next-buffer
+    "<left>"  #'previous-buffer)
+  (put 'next-buffer 'repeat-map 'buffer-navigation-repeat-map)
+  (put 'previous-buffer 'repeat-map 'buffer-navigation-repeat-map))
 
+(add-hook 'prog-mode-hook #'breadcrumb-local-mode)
 
 (use-package python
   :ensure nil
