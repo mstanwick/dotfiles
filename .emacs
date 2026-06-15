@@ -1,4 +1,8 @@
 ;;; Startup Settings
+;; Disable JIT native compilation to prevent async subprocesses from
+;; regenerating broken .eln files when compat-31 macros (static-when etc.)
+;; are not available in the compiler environment.
+(setq native-comp-jit-compilation nil)
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
@@ -6,6 +10,10 @@
 (require 'epa-file)
 (epa-file-enable)
 (package-initialize)
+;; Load compat-31 from elpa before straight.el initializes, since straight's
+;; bundled compat only goes up to compat-30 and would shadow elpa's version,
+;; leaving static-when/static-if undefined for packages that need them.
+(require 'compat)
 (require 'use-package)
 (setq use-package-always-ensure t)
 (setq use-package-always-defer t)
