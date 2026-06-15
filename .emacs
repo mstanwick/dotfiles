@@ -713,6 +713,14 @@
   :init
   (marginalia-mode))
 
+;; Workaround: marginalia calls seconds-to-string with extra args that older
+;; Emacs builds don't support. Fixed in newer marginalia; remove after upgrading.
+(with-eval-after-load 'marginalia
+  (when (and (fboundp 'seconds-to-string)
+             (= 1 (cdr (func-arity 'seconds-to-string))))
+    (advice-add 'seconds-to-string :around
+                (lambda (orig secs &rest _ignored) (funcall orig secs)))))
+
 (all-the-icons-completion-mode)
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
