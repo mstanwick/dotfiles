@@ -294,12 +294,14 @@
 							 (sqlite . t)))
 
 ;; Recommended settings for org-modern-mode
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel))
-  (face-spec-reset-face face)
-  (set-face-foreground face (face-attribute 'default :background)))
-(set-face-background 'fringe (face-attribute 'default :background))
+(let ((bg (face-attribute 'default :background)))
+  (unless (member bg '("unspecified-bg" "unspecified" nil))
+    (dolist (face '(window-divider
+                    window-divider-first-pixel
+                    window-divider-last-pixel))
+      (face-spec-reset-face face)
+      (set-face-foreground face bg))
+    (set-face-background 'fringe bg)))
 
 (setq org-auto-align-tags nil
       org-tags-column 0
