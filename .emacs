@@ -186,6 +186,7 @@
 
 (use-package hyperbole)
 (hyperbole-mode 1)
+(hywiki-mode :all)
 (hkey-ace-window-setup "\M-o")
 
 (use-package avy
