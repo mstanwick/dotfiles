@@ -7,32 +7,11 @@
 (require 'epa-file)
 (epa-file-enable)
 (package-initialize)
-;; Load compat-31 from ELPA before straight.el initializes; straight's
-;; bundled compat only covers compat-30 and would shadow ELPA's version,
-;; leaving static-when/static-if undefined for packages that need them.
-(require 'compat)
 (require 'use-package)
 (setq use-package-always-ensure t
       use-package-always-defer t)
-
-;; straight.el — for packages sourced directly from git
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el"
-                         (or (bound-and-true-p straight-base-dir)
-                             user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-;; Use Emacs's built-in Org rather than letting straight clone its own copy
-;; (e.g. as a dependency of org-modern-indent), which would mix two Org versions.
-(add-to-list 'straight-built-in-pseudo-packages 'org)
+;; Packages that only live in git repos use use-package's :vc keyword
+;; (built in since Emacs 30), so no second package manager is needed.
 
 (setq custom-file (locate-user-emacs-file "emacs-custom.el"))
 (load custom-file 'noerror)
@@ -500,7 +479,7 @@
 (global-org-modern-mode)
 
 (use-package org-modern-indent
-  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+  :vc (:url "https://github.com/jdtsmith/org-modern-indent" :rev :newest)
   :config
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
@@ -526,7 +505,7 @@
                       :height (cdr face)))
 
 ;; Fixed-pitch faces within org buffers
-(set-face-attribute 'org-block           nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-block           nil :foreground 'unspecified :inherit 'fixed-pitch)
 (set-face-attribute 'org-code            nil :inherit '(shadow fixed-pitch))
 (set-face-attribute 'org-indent          nil :inherit '(org-hide fixed-pitch))
 (set-face-attribute 'org-verbatim        nil :inherit '(shadow fixed-pitch))
@@ -822,10 +801,8 @@
 (define-advice hywiki-completion-at-point (:around (fn &rest args) use-sh)
   (let ((shell-file-name "/bin/sh"))
     (apply fn args)))
-(setq hyrolo-file-list
-      '("~/.rolo.org"
-        "~/git/org/"
-        "~/git/denote/"))
+;; hyrolo-file-list is set in private.el: it names personal folders, and
+;; HyRolo raises an error (stopping init) if a listed folder is missing.
 (hkey-ace-window-setup "\M-o")
 
 (use-package avy
@@ -930,12 +907,6 @@
                 ledger-complete-in-steps   t)))
 (add-hook 'ledger-report-mode-hook #'compilation-minor-mode)
 (add-hook 'ledger-mode-hook         #'hl-line-mode)
-
-(use-package meal-planner
-  :straight (meal-planner :type git :host github :repo "captainflasmr/meal-planner")
-  :config
-  (setq meal-planner-data-directory "~/git/org/meal_planning/meals/"
-        meal-planner-history-file   "~/git/org/meal_planning/my-meal-history.el"))
 
 (use-package emojify
   :ensure t
