@@ -1,0 +1,42 @@
+# Ghostty config (Linux/GNOME)
+# Full option docs: ghostty +show-config --default --docs
+# Note: comments must be on their own line; Ghostty does not allow trailing comments.
+
+# --- Font ---
+# JetBrains Mono is the built-in default; Fira Code and IBM Plex Mono are also installed
+font-family = JetBrains Mono
+font-size = 12
+# Disable programming ligatures (remove to keep them)
+font-feature = -calt
+adjust-cell-height = 10%
+
+# --- Colors ---
+# Always dark; for light/dark switching use: light:Gruvbox Light,dark:Gruvbox Dark
+theme = Gruvbox Dark
+# Prevents text from becoming invisible on a same-colored background
+minimum-contrast = 1.1
+
+# --- Window ---
+window-padding-x = 10
+window-padding-y = 8
+# Spread leftover padding evenly instead of on the bottom/right edges
+window-padding-balance = true
+# Padding takes on the color of the nearest cell
+window-padding-color = extend
+# Titlebar uses the terminal's colors (Linux only)
+window-theme = ghostty
+gtk-toolbar-style = flat
+gtk-titlebar-hide-when-maximized = true
+# Default is 0.7
+unfocused-split-opacity = 0.85
+# Light transparency only; GNOME can't blur behind it
+# background-opacity = 0.95
+
+# --- Cursor & mouse ---
+cursor-style = block
+cursor-style-blink = false
+mouse-hide-while-typing = true
+
+# --- Shell integration ---
+# Install Ghostty's terminfo on remote hosts, falling back to xterm-256color
+shell-integration-features = ssh-terminfo,ssh-env
