@@ -1,0 +1,5 @@
+#!/bin/sh
+# Installed into work-dots by install.sh. Work settings never leave the
+# machine by push; the post-commit hook backs them up to OneDrive instead.
+echo "pre-push: work-dots is never pushed; push blocked." >&2
+exit 1

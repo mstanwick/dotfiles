@@ -1,0 +1,46 @@
+#!/bin/sh
+# Installed into work-dots by install.sh. After each commit, writes the whole
+# repo as one bundle file to the company OneDrive, named for this machine:
+#   macOS  ~/Library/CloudStorage/OneDrive-<Company>/Backups/work-dots-mac.bundle
+#   WSL    /mnt/c/Users/<you>/OneDrive - <Company>/Backups/work-dots-wsl.bundle
+# To use another folder: git config workdots.backupdir /path/to/folder
+# Restore with: git clone <bundle file> work-dots
+
+case "$(uname -s)" in
+  Darwin)
+    name=mac
+    set -- "$HOME"/Library/CloudStorage/OneDrive-* ;;
+  *)
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+      name=wsl
+      # The work account's folder is "OneDrive - <Company>"; personal is plain "OneDrive".
+      set -- /mnt/c/Users/*/"OneDrive - "*
+    else
+      name=$(hostname -s 2>/dev/null || echo linux)
+      set --
+    fi ;;
+esac
+
+dest=$(git config --get workdots.backupdir)
+if [ -z "$dest" ]; then
+  for d in "$@"; do
+    case "$d" in *OneDrive-Personal) continue ;; esac
+    [ -d "$d" ] && { dest="$d/Backups"; break; }
+  done
+fi
+if [ -z "$dest" ]; then
+  echo "post-commit: company OneDrive folder not found; no backup written." >&2
+  echo "  Set one with: git config workdots.backupdir /path/to/folder" >&2
+  exit 0
+fi
+
+mkdir -p "$dest" || exit 0
+bundle="$dest/work-dots-$name.bundle"
+# Write to a temporary name first so OneDrive never syncs a half-written file.
+if git bundle create "$bundle.tmp" --all 2>/dev/null; then
+  mv -f "$bundle.tmp" "$bundle"
+else
+  rm -f "$bundle.tmp"
+  echo "post-commit: bundle failed; no backup written." >&2
+fi
+exit 0

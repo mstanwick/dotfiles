@@ -12,6 +12,10 @@
 # finds both. Files already in the way are renamed to NAME.pre-stow,
 # never deleted.
 #
+# On a work machine it also links two git hooks from .work-hooks/ into
+# work-dots: pre-push blocks every push, and post-commit backs the repo up
+# to the company OneDrive as a bundle file.
+#
 # Written for bash 3.2 and BSD tools so it also runs on macOS.
 set -euo pipefail
 
@@ -73,6 +77,18 @@ fi
 # Work settings must never point at GitHub.
 if [ -d "$WORK" ] && git -C "$WORK" remote -v 2>/dev/null | grep -q 'github\.com'; then
   stop "$WORK has a GitHub remote. Remove it: git -C $WORK remote remove <name>"
+fi
+# The backup and push-blocking hooks need work-dots to be a git repo, and
+# git must read hooks from its own .git/hooks.
+if [ -d "$WORK" ]; then
+  if ! git -C "$WORK" rev-parse --git-dir >/dev/null 2>&1; then
+    warn "$WORK isn't a git repo, so its changes aren't tracked or backed up. Run: git -C $WORK init"
+  else
+    hooks_path=$(git -C "$WORK" config --get core.hooksPath 2>/dev/null || true)
+    if [ -n "$hooks_path" ] && [ "$hooks_path" != ".git/hooks" ]; then
+      stop "core.hooksPath is set to $hooks_path, so git would skip the work-dots hooks (OneDrive backup, push block). Fix it for this repo only: git -C $WORK config core.hooksPath .git/hooks"
+    fi
+  fi
 fi
 
 # ~/.gitconfig is read after ~/.config/git/config, so its values win.
@@ -203,7 +219,31 @@ for repo in "${REPOS[@]}"; do
   (cd "$repo" && stow $pkgs)
 done
 
-# --- 5. Machine-only git config ---------------------------------------------
+# --- 5. work-dots git hooks -------------------------------------------------
+# Linked, not copied, so a `git pull` of this repo updates them. A different
+# hook already there is renamed to NAME.pre-stow.
+
+hooks=0
+if [ -d "$WORK" ] && git -C "$WORK" rev-parse --git-dir >/dev/null 2>&1; then
+  hooks_dir="$(cd "$WORK" && cd "$(git rev-parse --git-common-dir)" && pwd -P)/hooks"
+  for src in "$PUBLIC"/.work-hooks/*; do
+    [ -f "$src" ] || continue
+    dest="$hooks_dir/$(basename "$src")"
+    [ "$dest" -ef "$src" ] && continue
+    if [ -e "$dest" ] || [ -L "$dest" ]; then
+      if [ -e "$dest.pre-stow" ] || [ -L "$dest.pre-stow" ]; then
+        echo "Skipped hook $dest: it differs and $dest.pre-stow already exists. Sort them out by hand, then rerun." >&2
+        continue
+      fi
+      run mv -- "$dest" "$dest.pre-stow"
+    fi
+    run mkdir -p "$hooks_dir"
+    run ln -s "$src" "$dest"
+    hooks=$((hooks + 1))
+  done
+fi
+
+# --- 6. Machine-only git config ---------------------------------------------
 # Without ~/.gitconfig, `git config --global` writes to ~/.config/git/config,
 # which is a link into this public repo. An empty ~/.gitconfig catches those
 # writes instead; git reads it last, so it also works as a machine-only layer.
@@ -220,7 +260,7 @@ if [ ! -e "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ]; then
   fi
 fi
 
-# --- 6. zsh plugins ----------------------------------------------------------
+# --- 7. zsh plugins ----------------------------------------------------------
 
 if [ -d "$PUBLIC/zsh" ]; then
   while read -r name url; do
@@ -234,11 +274,12 @@ $ZSH_PLUGINS
 EOF
 fi
 
-# --- 7. Summary ------------------------------------------------------------
+# --- 8. Summary ------------------------------------------------------------
 
 [ "$DRY" -eq 1 ] && exit 0
 echo "Stowed: ${REPOS[*]}"
 [ "$moved" -gt 0 ] && echo "Moved aside: $moved file(s), now ending in .pre-stow"
+[ "$hooks" -gt 0 ] && echo "Linked $hooks work-dots hook(s): pre-push blocks pushes, post-commit backs up to OneDrive"
 if [ ! -d "$PRIVATE" ] && [ ! -d "$WORK" ]; then
   echo "No private-dots or work-dots found next to $PUBLIC."
   echo "  Personal machine: clone private-dots there, then rerun this script."
