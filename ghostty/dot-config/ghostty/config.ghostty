@@ -40,3 +40,10 @@ mouse-hide-while-typing = true
 # --- Shell integration ---
 # Install Ghostty's terminfo on remote hosts, falling back to xterm-256color
 shell-integration-features = ssh-terminfo,ssh-env
+
+# --- Optional layers ---
+# Later files override this one. "?" means skip the file if it's missing;
+# paths are relative to this file's folder.
+config-file = ?private.ghostty
+config-file = ?work.ghostty
+config-file = ?local.ghostty

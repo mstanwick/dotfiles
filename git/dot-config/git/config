@@ -1,0 +1,18 @@
+# Public git config, stowed to ~/.config/git/config.
+# Email lives in a private layer: private.gitconfig (personal machines)
+# or work.gitconfig (work machines). Missing include files are ignored.
+[user]
+	name = Matt Stanwick
+
+# Use gh's token from the system keyring instead of a plain-text file.
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+[include]
+	path = private.gitconfig
+	path = work.gitconfig
+	path = local.gitconfig

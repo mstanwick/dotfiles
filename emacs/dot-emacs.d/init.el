@@ -1,4 +1,4 @@
-;;; init.el (loaded via ~/.emacs symlink) -*- lexical-binding: t -*-
+;;; init.el --- Main Emacs config (stowed to ~/.emacs.d/init.el) -*- lexical-binding: t -*-
 
 ;;; Package Bootstrap
 (require 'package)
@@ -34,7 +34,7 @@
 ;; (e.g. as a dependency of org-modern-indent), which would mix two Org versions.
 (add-to-list 'straight-built-in-pseudo-packages 'org)
 
-(setq custom-file "~/.emacs.d/emacs-custom.el")
+(setq custom-file (locate-user-emacs-file "emacs-custom.el"))
 (load custom-file 'noerror)
 
 ;;; Core Settings
@@ -879,7 +879,7 @@
 (use-package time-zones :ensure t)
 
 (use-package display-wttr
-  :custom (display-wttr-locations '("Raleigh, NC"))
+  ;; display-wttr-locations is set in private.el.
   :config (display-wttr-mode 1))
 
 (use-package eat
@@ -1007,8 +1007,14 @@
         agent-shell-prefer-viewport-interaction t))
 (setopt agent-shell-show-cost-indicator t)
 
-;;; Private Configuration
-(load "~/git/private-dots/private-emacs.el")
+;;; Private, Work and Local Configuration
+;; Optional layers, loaded last so they can override anything above:
+;;   private.el - personal settings (private-dots repo, personal machines only)
+;;   work.el    - work settings (work-dots repo, work machines only)
+;;   local.el   - this machine only, not in any repo
+;; Missing files are skipped, so the same init.el works on every machine.
+(dolist (file '("private.el" "work.el" "local.el"))
+  (load (locate-user-emacs-file file) 'noerror 'nomessage))
 
 ;; `server-running-p' is not autoloaded, so server.el must be loaded first.
 ;; A daemon starts its own server right after init, so only do this otherwise.
