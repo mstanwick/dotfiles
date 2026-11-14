@@ -29,3 +29,13 @@
 ;; Prevent package.el from auto-initializing before init.el runs.
 ;; We call (package-initialize) explicitly after configuring archives.
 (setq package-enable-at-startup nil)
+
+;; EMMS rewrites its cache file without a lexical-binding cookie, so
+;; Emacs 31 warns every time it loads it. Silence that one file only;
+;; the warning still appears for any other file missing a cookie.
+;; warnings.el only loads when the first warning is shown, so add the
+;; entry once it loads (it runs before that warning is displayed).
+(with-eval-after-load 'warnings
+  (add-to-list 'warning-suppress-log-types
+               `(files missing-lexbind-cookie
+                       ,(abbreviate-file-name (locate-user-emacs-file "emms/cache")))))
