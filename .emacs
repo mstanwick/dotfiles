@@ -100,6 +100,45 @@
             web-mode
             rjsx-mode) . add-node-modules-path)))
 
+;;; WSL Settings
+(defun my/wsl-p ()
+  "Return non-nil when Emacs is running under Windows Subsystem for Linux."
+  ;; WSL kernels report a release such as "5.15.167.4-microsoft-standard-WSL2".
+  ;; `operating-system-release' holds that string, so no `uname' process is needed.
+  (and (eq system-type 'gnu/linux)
+       (string-match-p "microsoft" (downcase (or operating-system-release "")))
+       t))
+
+(when (my/wsl-p)
+  ;; Copy kills to the Windows clipboard.
+  (setq interprogram-cut-function
+        (lambda (text)
+          (let* ((process-connection-type nil) ; use a pipe, not a pty
+                 (proc (start-process "clip" nil "clip.exe")))
+            (process-send-string proc text)
+            (process-send-eof proc))))
+  ;; Open links in the Windows default browser. `start-process' passes the
+  ;; URL as one argument, so it needs no shell quoting and doesn't block.
+  (setq browse-url-browser-function
+        (lambda (url &rest _)
+          (start-process "explorer" nil "explorer.exe" url))))
+
+(with-eval-after-load 'ert
+  (ert-deftest my/wsl-p-test ()
+    (let ((system-type 'gnu/linux))
+      (let ((operating-system-release "5.15.167.4-microsoft-standard-WSL2"))
+        (should (my/wsl-p)))
+      (let ((operating-system-release "4.4.0-19041-Microsoft")) ; WSL1
+        (should (my/wsl-p)))
+      (let ((operating-system-release "6.17.4-300.fc45.x86_64"))
+        (should-not (my/wsl-p)))
+      (let ((operating-system-release nil))
+        (should-not (my/wsl-p))))
+    ;; A macOS kernel string never counts, whatever it contains.
+    (let ((system-type 'darwin)
+          (operating-system-release "microsoft"))
+      (should-not (my/wsl-p)))))
+
 ;;; UI & Display
 (setq-default frame-title-format ""
               truncate-lines t)
@@ -507,12 +546,13 @@
   :ensure t
   :config
   ;; Pick the right notification backend per platform.
-  ;; WSL without a notification bridge falls back to the echo area.
+  ;; WSL reports gnu/linux but usually has no notification service, so it
+  ;; is checked first and falls back to the echo area.
   (setq alert-default-style
-        (pcase system-type
-          ('darwin  'osx-notifier)   ; requires terminal-notifier (brew install)
-          ('gnu/linux 'notifications) ; requires libnotify / notify-send
-          (_ 'message))
+        (cond ((eq system-type 'darwin) 'osx-notifier) ; requires terminal-notifier (brew install)
+              ((my/wsl-p) 'message)
+              ((eq system-type 'gnu/linux) 'notifications) ; requires libnotify / notify-send
+              (t 'message))
         org-alert-interval 300
         org-alert-notify-after-event-cutoff 10
         org-alert-notification-title "Org Alert Reminder")
@@ -667,6 +707,8 @@
 (add-hook 'web-mode-hook #'prettier-js-mode)
 
 (use-package combobulate
+  ;; Loaded from a local clone; skip it on machines that don't have one.
+  :when (file-directory-p (expand-file-name "~/git/combobulate/"))
   :custom (combobulate-key-prefix "C-c o")
   :hook (prog-mode . combobulate-mode)
   :load-path ("~/git/combobulate/"))
@@ -961,7 +1003,8 @@
   :ensure t
   :config
   (setq agent-shell-anthropic-authentication
-        (agent-shell-anthropic-make-authentication :login t)))
+        (agent-shell-anthropic-make-authentication :login t)
+        agent-shell-prefer-viewport-interaction t))
 (setopt agent-shell-show-cost-indicator t)
 
 ;;; Private Configuration
