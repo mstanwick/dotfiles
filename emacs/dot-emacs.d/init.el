@@ -62,7 +62,9 @@
 ;; accidentally trigger on WSL, which reports window-system 'x when
 ;; running under WSLg or any X server.
 (when (eq system-type 'darwin)
-  (exec-path-from-shell-initialize)
+  (use-package exec-path-from-shell
+    :demand t
+    :config (exec-path-from-shell-initialize))
   ;; macOS ships BSD ls; use Homebrew's GNU ls (brew install coreutils).
   (setq insert-directory-program "gls"
         dired-use-ls-dired t)
@@ -141,12 +143,14 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
-(setq spacious-padding-subtle-frame-lines
-      '(:mode-line-active default
-        :mode-line-inactive vertical-border)
-      spacious-padding-widths
-      '(:internal-border-width 5))
-(spacious-padding-mode 1)
+(use-package spacious-padding
+  :init
+  (setq spacious-padding-subtle-frame-lines
+        '(:mode-line-active default
+          :mode-line-inactive vertical-border)
+        spacious-padding-widths
+        '(:internal-border-width 5))
+  (spacious-padding-mode 1))
 
 ;;; Window Management
 (winner-mode 1)
@@ -247,8 +251,9 @@
     (advice-add 'seconds-to-string :around
       (lambda (orig secs &rest _) (funcall orig secs)))))
 
-(all-the-icons-completion-mode)
-(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+(use-package all-the-icons-completion
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init (all-the-icons-completion-mode 1))
 
 (use-package orderless
   :ensure t
@@ -379,6 +384,12 @@
   (auto-fill-mode 0)
   (visual-line-mode 1))
 
+;; Org Babel languages that don't ship with Org: ob-ledger is in
+;; org-contrib, ob-restclient is its own package. Declared so a fresh
+;; machine installs them before org's :config loads them.
+(use-package org-contrib)
+(use-package ob-restclient)
+
 (use-package org
   :ensure nil
   :hook (org-mode . my/org-mode-setup)
@@ -476,7 +487,8 @@
       (set-face-foreground face bg))
     (set-face-background 'fringe bg)))
 
-(global-org-modern-mode)
+(use-package org-modern
+  :init (global-org-modern-mode 1))
 
 (use-package org-modern-indent
   :vc (:url "https://github.com/jdtsmith/org-modern-indent" :rev :newest)
@@ -676,14 +688,15 @@
 
 (with-eval-after-load 'flycheck
   (add-to-list 'flycheck-checkers 'typescript-eslint))
-(add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
-(add-hook 'typescript-mode-hook #'flycheck-mode)
+(use-package flycheck
+  :hook ((emacs-lisp-mode typescript-mode) . flycheck-mode))
 
 ;; js-mode is remapped to typescript-ts-mode via major-mode-remap-alist,
 ;; so js-mode-hook never fires. All JS/TS hooks go on typescript-ts-mode-hook.
-(add-hook 'typescript-ts-mode-hook #'js2-minor-mode)
-(add-hook 'typescript-ts-mode-hook #'prettier-js-mode)
-(add-hook 'web-mode-hook #'prettier-js-mode)
+(use-package js2-mode
+  :hook (typescript-ts-mode . js2-minor-mode))
+(use-package prettier-js
+  :hook ((typescript-ts-mode web-mode) . prettier-js-mode))
 
 (use-package combobulate
   ;; Loaded from a local clone; skip it on machines that don't have one.
@@ -700,7 +713,8 @@
     (setq-local comment-auto-fill-only-comments t)
     (auto-fill-mode 1)))
 (add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'prog-mode-hook #'breadcrumb-local-mode)
+(use-package breadcrumb
+  :hook (prog-mode . breadcrumb-local-mode))
 
 ;; Highlight TODO/FIXME/BUG/NOTE in source code
 (defvar highlight-codetags-keywords
@@ -792,6 +806,7 @@
 
 ;;; Applications
 
+(use-package ace-window)  ; used by hkey-ace-window-setup below
 (use-package hyperbole)
 (hyperbole-mode 1)
 (hywiki-mode :all)
@@ -815,6 +830,7 @@
 (avy-setup-default)
 (global-set-key (kbd "C-c C-j") #'avy-resume)
 
+(use-package elfeed-org)  ; called from elfeed's :config
 (use-package elfeed
   :bind ("C-c w" . elfeed)
   :config
@@ -874,6 +890,7 @@
   :ensure t
   :config (pyvenv-mode 1))
 
+(use-package eshell-prompt-extras)
 (with-eval-after-load "esh-opt"
   (autoload 'epe-theme-lambda "eshell-prompt-extras")
   (setq eshell-highlight-prompt nil
@@ -930,9 +947,12 @@
 (global-set-key (kbd "C-c r")        #'revert-buffer)
 (global-set-key (kbd "C-c s")        #'eshell-current-directory)
 (global-set-key [remap list-buffers] #'ibuffer)
-(global-set-key (kbd "C-x p i")      #'org-cliplink)
-(global-set-key (kbd "C-c ;")        #'er/expand-region)
 (global-set-key (kbd "M-C")          #'upcase-char)
+
+(use-package org-cliplink
+  :bind ("C-x p i" . org-cliplink))
+(use-package expand-region
+  :bind ("C-c ;" . er/expand-region))
 
 ;;; AI Shell
 (defun my/nvm-newest-bin (&optional root)
