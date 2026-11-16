@@ -798,25 +798,27 @@
 (use-package ace-window)  ; used by hkey-ace-window-setup below
 (use-package hyperbole
   :config
-  ;; hui-select.el uses treesit macros that expand at load time; if a grammar
-  ;; (e.g. CSS) isn't installed yet the eager macro-expansion raises an error
-  ;; and prevents Emacs from starting. Catch it so startup still succeeds, then
-  ;; run M-x treesit-auto-install-all to install missing grammars.
-  ;; hywiki.el → hactypes.el has the same eager macro-expansion problem.
+  ;; Several hyperbole files (hui-select.el, hactypes.el, hmouse-drv.el, …) use
+  ;; treesit macros inside eval-and-compile blocks that eagerly load grammars at
+  ;; macro-expansion time.  Any missing grammar (e.g. CSS on a fresh WSL machine)
+  ;; raises treesit-load-language-error and crashes Emacs startup before the
+  ;; treesit-auto filter has a chance to run.  Wrap all hyperbole setup in one
+  ;; condition-case so Emacs can still start; then run
+  ;; M-x treesit-auto-install-all to install missing grammars permanently.
   (condition-case err
       (progn
         (hyperbole-mode 1)
-        (hywiki-mode :all))
-    (error (message "Warning: hyperbole/hywiki failed to load: %S" err))))
-;; HyWiki's completion runs grep with a file glob through the user's shell.
-;; Under zsh a no-match glob fails with "no matches found"; sh gives the
-;; "No such file or directory" error HyWiki expects.
-(define-advice hywiki-completion-at-point (:around (fn &rest args) use-sh)
-  (let ((shell-file-name "/bin/sh"))
-    (apply fn args)))
-;; hyrolo-file-list is set in private.el: it names personal folders, and
-;; HyRolo raises an error (stopping init) if a listed folder is missing.
-(hkey-ace-window-setup "\M-o")
+        (hywiki-mode :all)
+        ;; HyWiki's completion runs grep with a file glob through the user's
+        ;; shell.  Under zsh a no-match glob fails with "no matches found"; sh
+        ;; gives the "No such file or directory" error HyWiki expects.
+        (define-advice hywiki-completion-at-point (:around (fn &rest args) use-sh)
+          (let ((shell-file-name "/bin/sh"))
+            (apply fn args)))
+        ;; hyrolo-file-list is set in private.el: it names personal folders, and
+        ;; HyRolo raises an error (stopping init) if a listed folder is missing.
+        (hkey-ace-window-setup "\M-o"))
+    (error (message "Warning: hyperbole setup failed (missing treesit grammar?): %S" err))))
 
 (use-package avy
   :bind
