@@ -796,8 +796,15 @@
 ;;; Applications
 
 (use-package ace-window)  ; used by hkey-ace-window-setup below
-(use-package hyperbole)
-(hyperbole-mode 1)
+(use-package hyperbole
+  :config
+  ;; hui-select.el uses treesit macros that expand at load time; if a grammar
+  ;; (e.g. CSS) isn't installed yet the eager macro-expansion raises an error
+  ;; and prevents Emacs from starting. Catch it so startup still succeeds, then
+  ;; run M-x treesit-auto-install-all to install missing grammars.
+  (condition-case err
+      (hyperbole-mode 1)
+    (error (message "Warning: hyperbole-mode failed to load: %S" err))))
 (hywiki-mode :all)
 ;; HyWiki's completion runs grep with a file glob through the user's shell.
 ;; Under zsh a no-match glob fails with "no matches found"; sh gives the
