@@ -802,10 +802,12 @@
   ;; (e.g. CSS) isn't installed yet the eager macro-expansion raises an error
   ;; and prevents Emacs from starting. Catch it so startup still succeeds, then
   ;; run M-x treesit-auto-install-all to install missing grammars.
+  ;; hywiki.el → hactypes.el has the same eager macro-expansion problem.
   (condition-case err
-      (hyperbole-mode 1)
-    (error (message "Warning: hyperbole-mode failed to load: %S" err))))
-(hywiki-mode :all)
+      (progn
+        (hyperbole-mode 1)
+        (hywiki-mode :all))
+    (error (message "Warning: hyperbole/hywiki failed to load: %S" err))))
 ;; HyWiki's completion runs grep with a file glob through the user's shell.
 ;; Under zsh a no-match glob fails with "no matches found"; sh gives the
 ;; "No such file or directory" error HyWiki expects.
