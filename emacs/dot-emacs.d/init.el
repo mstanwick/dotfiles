@@ -516,14 +516,18 @@
                       :weight 'regular
                       :height (cdr face)))
 
-;; Fixed-pitch faces within org buffers
-(set-face-attribute 'org-block           nil :foreground 'unspecified :inherit 'fixed-pitch)
-(set-face-attribute 'org-code            nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-indent          nil :inherit '(org-hide fixed-pitch))
-(set-face-attribute 'org-verbatim        nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line       nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox        nil :inherit 'fixed-pitch)
+;; Fixed-pitch faces within org buffers.
+;; Deferred until org loads because these faces aren't defined until then
+;; (org-indent lives in org-indent.el, the rest in org-faces.el).
+(with-eval-after-load 'org
+  (set-face-attribute 'org-block           nil :foreground 'unspecified :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code            nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim        nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line       nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox        nil :inherit 'fixed-pitch))
+(with-eval-after-load 'org-indent
+  (set-face-attribute 'org-indent          nil :inherit '(org-hide fixed-pitch)))
 
 (defun my/org-mode-visual-fill ()
   (setq visual-fill-column-width 110
