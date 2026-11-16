@@ -618,23 +618,15 @@
 
 ;;; Software Development
 
-;; Tree-sitter language grammar sources
-(setq treesit-language-source-alist
-      '((bash       "https://github.com/tree-sitter/tree-sitter-bash")
-        (cmake      "https://github.com/uyha/tree-sitter-cmake")
-        (css        "https://github.com/tree-sitter/tree-sitter-css")
-        (elisp      "https://github.com/Wilfred/tree-sitter-elisp")
-        (go         "https://github.com/tree-sitter/tree-sitter-go")
-        (html       "https://github.com/tree-sitter/tree-sitter-html")
-        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-        (json       "https://github.com/tree-sitter/tree-sitter-json")
-        (make       "https://github.com/alemuller/tree-sitter-make")
-        (markdown   "https://github.com/ikatyang/tree-sitter-markdown")
-        (python     "https://github.com/tree-sitter/tree-sitter-python")
-        (toml       "https://github.com/tree-sitter/tree-sitter-toml")
-        (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-        (yaml       "https://github.com/ikatyang/tree-sitter-yaml")))
+;; treesit-auto manages grammar installation and picks versions compatible
+;; with the current Emacs tree-sitter ABI automatically. This avoids
+;; version-mismatch errors when grammars bump their ABI (e.g. 14 -> 15)
+;; before the system libtree-sitter catches up.
+(use-package treesit-auto
+  :demand t
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 ;; setq rather than repeated add-to-list calls to avoid accidentally
 ;; building a nested alist (each add-to-list call adds one cons cell).
@@ -718,6 +710,8 @@
     (auto-fill-mode 1)))
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (use-package breadcrumb
+  :ensure nil
+  :vc (:url "https://github.com/joaotavora/breadcrumb" :rev :newest)
   :hook (prog-mode . breadcrumb-local-mode))
 
 ;; Highlight TODO/FIXME/BUG/NOTE in source code
