@@ -628,22 +628,8 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; setq rather than repeated add-to-list calls to avoid accidentally
-;; building a nested alist (each add-to-list call adds one cons cell).
-(setq major-mode-remap-alist
-      '((python-mode     . python-ts-mode)
-        (css-mode        . css-ts-mode)
-        (typescript-mode . typescript-ts-mode)
-        (js-mode         . typescript-ts-mode)
-        (js2-mode        . typescript-ts-mode)
-        (c-mode          . c-ts-mode)
-        (c++-mode        . c++-ts-mode)
-        (c-or-c++-mode   . c-or-c++-ts-mode)
-        (bash-mode       . bash-ts-mode)
-        (json-mode       . json-ts-mode)
-        (js-json-mode    . json-ts-mode)
-        (sh-mode         . bash-ts-mode)
-        (sh-base-mode    . bash-ts-mode)))
+;; major-mode-remap-alist is managed by treesit-auto, which only remaps
+;; when the grammar is actually available. No manual list needed.
 
 (setq treesit-font-lock-level 4
       js2-basic-offset 2)
