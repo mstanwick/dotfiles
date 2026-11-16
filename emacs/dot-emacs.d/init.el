@@ -797,6 +797,7 @@
 
 (use-package ace-window)  ; used by hkey-ace-window-setup below
 (use-package hyperbole
+  :demand t
   :config
   ;; Several hyperbole files (hui-select.el, hactypes.el, hmouse-drv.el, …) use
   ;; treesit macros inside eval-and-compile blocks that eagerly load grammars at
