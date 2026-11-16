@@ -625,6 +625,11 @@
 (use-package treesit-auto
   :demand t
   :config
+  ;; Only remap modes for grammars that are installed and ABI-compatible.
+  ;; The t argument suppresses the "not available" warning during the check.
+  (setq treesit-auto-langs
+        (cl-remove-if-not (lambda (lang) (treesit-ready-p lang t))
+                          treesit-auto-langs))
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
