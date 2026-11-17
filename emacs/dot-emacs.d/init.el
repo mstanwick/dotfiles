@@ -98,6 +98,13 @@
                  (proc (start-process "clip" nil "clip.exe")))
             (process-send-string proc text)
             (process-send-eof proc))))
+  ;; WSLg asynchronously syncs the Windows clipboard back to the X clipboard.
+  ;; Emacs sets interprogram-paste-function to x-selection-value under X11,
+  ;; so current-kill reads the X clipboard instead of the Emacs kill ring.
+  ;; By the second org-refile, the X clipboard has the previous heading
+  ;; (synced from Windows), causing org-paste-subtree to insert the wrong
+  ;; content.  Nil this out so current-kill always uses the kill ring.
+  (setq interprogram-paste-function nil)
   ;; Open links in the Windows default browser. `start-process' passes the
   ;; URL as one argument, so it needs no shell quoting and doesn't block.
   (setq browse-url-browser-function
