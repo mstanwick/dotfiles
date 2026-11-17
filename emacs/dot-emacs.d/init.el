@@ -804,7 +804,13 @@
   (condition-case err
       (progn
         (hyperbole-mode 1)
-        (hywiki-mode :all)
+        ;; On WSL, hywiki-mode :all fontifies every buffer for WikiWords,
+        ;; causing cursor flicker when typing capital letters due to overlay
+        ;; manipulation in WSL's display pipeline.  Plain mode restricts
+        ;; fontification to hywiki-directory only.
+        (if (my/wsl-p)
+            (hywiki-mode 1)
+          (hywiki-mode :all))
         ;; HyWiki's completion runs grep with a file glob through the user's
         ;; shell.  Under zsh a no-match glob fails with "no matches found"; sh
         ;; gives the "No such file or directory" error HyWiki expects.
