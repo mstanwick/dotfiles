@@ -107,7 +107,14 @@
   ;; auto-revert to replace org buffers mid-operation (e.g. during refile),
   ;; which invalidates saved markers and refiles the wrong heading.  Fall
   ;; back to polling instead.
-  (setq auto-revert-use-notify nil))
+  (setq auto-revert-use-notify nil)
+  ;; org-refile does not auto-save buffers after a refile.  With polling
+  ;; auto-revert, the on-disk file still has the original heading, so the
+  ;; next poll reverts the buffer and undoes the refile.  Force a save of
+  ;; all org buffers after every refile to keep disk state in sync.
+  (with-eval-after-load 'org
+    (advice-add 'org-refile :after
+      (lambda (&rest _) (org-save-all-org-buffers)))))
 
 (with-eval-after-load 'ert
   (ert-deftest my/wsl-p-test ()
